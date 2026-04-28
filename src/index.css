@@ -1,0 +1,31 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap");
+@import "tailwindcss";
+
+:root {
+  --color-cream: #f6f2e9;
+  --color-gold: #f3c76b;
+  --color-forest: #0f766e;
+  --color-ink: #0f172a;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background:
+    radial-gradient(circle at top, rgba(16, 185, 129, 0.08), transparent 30%),
+    linear-gradient(180deg, #fbf8f1 0%, #f6f2e9 100%);
+  color: var(--color-ink);
+  font-family: "Manrope", sans-serif;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.font-display {
+  font-family: "Fraunces", serif;
+}
