@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Footer from "../components/Footer/Footer";
 import Navbar from "../components/Navbar";
+import AIFeatureCards from "../components/AIFeatureCards";
 
 
 const categories = [
@@ -43,11 +44,6 @@ const categories = [
 ];
 
 
-const plannerPoints = [
-  "Suggest routes based on your days, budget, and interests",
-  "Combine wildlife, culture, and nature without overplanning",
-  "Surface practical trip ideas instead of generic inspiration",
-];
 
 const galleryImages: Record<string, string[]> = {
   "Wildlife Safaris": [
@@ -213,16 +209,26 @@ function Home() {
                   <p className="mt-3 max-w-sm text-sm leading-7 text-white/85">
                     {category.description}
                   </p>
-                  <div className="mt-4 flex items-center justify-between">
-                    <p className="text-sm font-medium text-[var(--color-gold)]">
+                  <div className="mt-4 flex items-center justify-between gap-2">
+                    <p className="text-sm font-medium text-[var(--color-gold)] truncate">
                       {category.subtitle}
                     </p>
-                    <span className="flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white opacity-0 backdrop-blur-sm transition duration-300 group-hover:opacity-100">
-                      View photos
-                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                        <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </span>
+                    {category.className.includes("col-span") || category.className.includes("row-span") ? (
+                      // Large cards — full text button
+                      <span className="flex shrink-0 items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white opacity-0 backdrop-blur-sm transition duration-300 group-hover:opacity-100">
+                        View photos
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                          <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </span>
+                    ) : (
+                      // Small cards — icon only
+                      <span className="flex shrink-0 h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white opacity-0 backdrop-blur-sm transition duration-300 group-hover:opacity-100">
+                        <svg width="13" height="13" viewBox="0 0 12 12" fill="none">
+                          <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </span>
+                    )}
                   </div>
                 </div>
               </article>
@@ -283,6 +289,8 @@ function Home() {
 
       <section id="planner" className="px-4 py-20 md:px-8">
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_1fr]">
+
+          {/* Left — image, same as before */}
           <div className="overflow-hidden rounded-[2rem]">
             <img
               src="/images/History/two.jpg"
@@ -291,37 +299,25 @@ function Home() {
             />
           </div>
 
+          {/* Right — dark panel with 4 animated feature cards */}
           <div className="rounded-[2rem] bg-slate-950 p-8 text-white shadow-[0_28px_80px_rgba(15,23,42,0.26)] md:p-10">
             <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[var(--color-gold)]">
-              AI Trip Planner
+              AI Platform
             </p>
-            <h2 className="mt-4 font-display text-4xl md:text-5xl">
-              Keep AI as a helpful layer, not the whole story.
+            <h2 className="mt-3 font-display text-3xl md:text-4xl">
+              Everything your trip needs, powered by AI.
             </h2>
-            <p className="mt-5 text-sm leading-7 text-slate-300 md:text-base">
-              The homepage should first sell the destination itself. AI becomes useful
-              after interest is created, by helping visitors turn broad inspiration into a
-              practical route.
-            </p>
 
-            <div className="mt-8 space-y-4">
-              {plannerPoints.map((item) => (
-                <div
-                  key={item}
-                  className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-sm leading-7 text-slate-200"
-                >
-                  {item}
-                </div>
-              ))}
-            </div>
+            <AIFeatureCards />
 
             <a
-              href="#home"
-              className="mt-8 inline-flex rounded-full bg-[var(--color-gold)] px-6 py-3 text-sm font-semibold text-slate-950 transition hover:scale-[1.02]"
+              href="#planner"
+              className="mt-7 inline-flex rounded-full bg-[var(--color-gold)] px-6 py-3 text-sm font-semibold text-slate-950 transition hover:scale-[1.02]"
             >
               Plan a Smarter Route
             </a>
           </div>
+
         </div>
       </section>
 
