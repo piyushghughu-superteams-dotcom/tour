@@ -1,11 +1,6 @@
+import { useState } from "react";
 import Footer from "../components/Footer/Footer";
 
-const highlights = [
-  { value: "12", label: "National parks and reserves" },
-  { value: "4", label: "Signature travel themes" },
-  { value: "7+", label: "Strong short-trip circuits" },
-  { value: "AI", label: "Planner support when needed" },
-];
 
 const categories = [
   {
@@ -46,20 +41,6 @@ const categories = [
   },
 ];
 
-const quickJourneys = [
-  {
-    title: "For first-time visitors",
-    detail: "Mix wildlife, one heritage stop, and a calm river experience in a balanced 5 to 7 day journey.",
-  },
-  {
-    title: "For culture-focused trips",
-    detail: "Build around temples, architecture, local stories, and slower stays in historical towns.",
-  },
-  {
-    title: "For nature weekends",
-    detail: "Choose a shorter route around forests, viewpoints, and water landscapes with easy pacing.",
-  },
-];
 
 const plannerPoints = [
   "Suggest routes based on your days, budget, and interests",
@@ -67,7 +48,30 @@ const plannerPoints = [
   "Surface practical trip ideas instead of generic inspiration",
 ];
 
+const galleryImages: Record<string, string[]> = {
+  "Wildlife Safaris": [
+    "/images/jungle/one.jpg","/images/jungle/two.jpg","/images/jungle/three.jpg",
+    "/images/jungle/four.jpg","/images/jungle/five.jpg","/images/jungle/six.jpg",
+    "/images/jungle/seven.jpg","/images/jungle/eight.jpg","/images/jungle/nine.jpg",
+  ],
+  "Heritage & Temples": [
+    "/images/History/one.jpg","/images/History/two.jpg","/images/History/three.jpg",
+    "/images/History/four.jpg","/images/History/five.jpg","/images/History/six.jpg",
+    "/images/History/seven.jpg","/images/History/eight.jpg",
+  ],
+  "Water Escapes": [
+    "/images/waterplaces/one.jpg","/images/waterplaces/two.jpg","/images/waterplaces/three.jpg",
+    "/images/waterplaces/four.jpg","/images/waterplaces/five.jpg",
+  ],
+  "Hill Stations": [
+    "/images/hills/one.jpg","/images/hills/two.jpg","/images/hills/three.jpeg",
+    "/images/hills/four.jpg","/images/hills/five.jpg","/images/hills/six.jpg",
+  ],
+};
+
 function Home() {
+  const [expanded, setExpanded] = useState<string | null>(null);
+
   return (
     <div className="bg-[var(--color-cream)] text-slate-950">
       <nav className="fixed inset-x-0 top-0 z-50">
@@ -108,95 +112,66 @@ function Home() {
         </div>
       </nav>
 
-      <section
-        id="home"
-        className="relative min-h-screen overflow-hidden bg-slate-950 px-4 pb-16 pt-32 md:px-8"
-      >
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          className="absolute inset-0 h-full w-full scale-[1.03] object-cover"
-        >
-          <source src="/hero-video.mp4" type="video/mp4" />
-        </video>
+      <section id="home" className="relative min-h-screen overflow-hidden">
+        {/* Hero image — Bhedaghat river gorge */}
+        <img
+          src="/images/waterplaces/two.jpg"
+          alt="Madhya Pradesh landscape"
+          className="absolute inset-0 h-full w-full object-cover object-center"
+        />
 
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(2,6,23,0.35),rgba(2,6,23,0.8)),linear-gradient(90deg,rgba(15,23,42,0.68),rgba(15,23,42,0.22)_48%,rgba(15,23,42,0.55)),radial-gradient(circle_at_top_left,rgba(16,185,129,0.12),transparent_28%)]" />
+        {/* Gradient overlay — dark left, lighter right, fades to dark bottom */}
+        <div className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(105deg, rgba(5,12,18,0.82) 0%, rgba(5,12,18,0.55) 50%, rgba(5,12,18,0.35) 100%), linear-gradient(180deg, rgba(5,12,18,0.2) 0%, rgba(5,12,18,0.0) 40%, rgba(5,12,18,0.75) 100%)",
+          }}
+        />
 
-        <div className="relative mx-auto grid min-h-[calc(100vh-8rem)] w-full max-w-7xl items-end gap-12 lg:grid-cols-[1.18fr_0.82fr]">
-          <div className="max-w-4xl pt-10 text-white">
-            <div className="mb-6 inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.32em] text-white/85 backdrop-blur-xl">
-              Real journeys through Madhya Pradesh
+        {/* Content */}
+        <div className="relative flex min-h-screen flex-col px-6 pt-40 pb-20 md:px-12 lg:px-20">
+          <div className="mt-auto max-w-3xl">
+            {/* Eyebrow */}
+            <div className="mb-8 flex items-center gap-3">
+              <span className="h-px w-10 bg-[var(--color-gold)]" />
+              <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-gold)]">
+                Madhya Pradesh, India
+              </span>
             </div>
 
-            <h1 className="font-display text-5xl leading-[0.94] sm:text-6xl md:text-7xl lg:text-[5.35rem]">
-              Discover forests, heritage towns, and riverside landscapes in one state.
+            <h1 className="font-display text-5xl leading-[1.02] text-white sm:text-6xl md:text-7xl lg:text-[5.5rem] lg:leading-[0.96]">
+              Where forests,<br />
+              temples &amp; rivers<br />
+              meet.
             </h1>
 
-            <p className="mt-6 max-w-2xl text-base leading-8 text-slate-200 md:text-lg">
-              Madhya Pradesh brings together tiger reserves, historic architecture,
-              sacred places, and quiet natural escapes. This homepage is now shaped
-              around real travel categories so it feels closer to an actual tourism brand.
+            <p className="mt-7 max-w-lg text-base leading-8 text-white/70 md:text-lg">
+              Tiger reserves, carved monuments, marble gorges, and cool hill retreats —
+              Madhya Pradesh packs more variety than any single trip can hold.
             </p>
 
-            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+            <div className="mt-10 flex flex-wrap gap-4">
               <a
                 href="#categories"
-                className="rounded-full bg-[var(--color-gold)] px-7 py-4 text-center text-sm font-semibold text-slate-950 transition hover:scale-[1.02]"
+                className="rounded-full bg-[var(--color-gold)] px-8 py-4 text-sm font-semibold text-slate-950 shadow-[0_8px_32px_rgba(243,199,107,0.4)] transition hover:brightness-110"
               >
-                Explore Categories
+                Explore MP
               </a>
               <a
                 href="#planner"
-                className="rounded-full border border-white/25 bg-white/10 px-7 py-4 text-center text-sm font-semibold text-white backdrop-blur-xl transition hover:bg-white/16"
+                className="rounded-full border border-white/25 bg-white/10 px-8 py-4 text-sm font-semibold text-white backdrop-blur-md transition hover:bg-white/18"
               >
-                Use AI Trip Planner
+                Plan My Trip
               </a>
             </div>
-
-            <div className="mt-12 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              {highlights.map((item) => (
-                <div
-                  key={item.label}
-                  className="rounded-3xl border border-white/15 bg-white/10 p-5 backdrop-blur-xl"
-                >
-                  <p className="font-display text-3xl text-[var(--color-gold)]">
-                    {item.value}
-                  </p>
-                  <p className="mt-2 text-sm text-slate-200">{item.label}</p>
-                </div>
-              ))}
-            </div>
           </div>
 
-          <div className="flex justify-end">
-            <div className="w-full max-w-md rounded-[2rem] border border-white/15 bg-white/10 p-6 text-white shadow-[0_30px_80px_rgba(0,0,0,0.35)] backdrop-blur-xl">
-              <p className="text-xs uppercase tracking-[0.3em] text-white/70">
-                Suggested Route
-              </p>
-              <h2 className="mt-4 font-display text-3xl">
-                6 days across wildlife, heritage, and river views
-              </h2>
-              <p className="mt-4 text-sm leading-7 text-slate-200">
-                A good first MP itinerary can begin with a safari circuit, continue into
-                temple or fort architecture, and end with a quieter nature stop.
-              </p>
+        </div>
 
-              <div className="mt-6 space-y-3">
-                {quickJourneys.map((item) => (
-                  <div
-                    key={item.title}
-                    className="rounded-2xl border border-white/10 bg-slate-950/25 px-4 py-4"
-                  >
-                    <p className="text-sm font-semibold text-white">{item.title}</p>
-                    <p className="mt-2 text-sm leading-6 text-slate-200">{item.detail}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+        {/* Scroll hint */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/40">
+          <span className="text-[10px] uppercase tracking-[0.3em]">Scroll</span>
+          <span className="h-6 w-px bg-white/25" />
         </div>
       </section>
 
@@ -212,25 +187,58 @@ function Home() {
               </h2>
             </div>
             <p className="max-w-xl text-sm leading-7 text-slate-600 md:text-base">
-              I used your real image folders to build the core homepage categories:
-              jungle, heritage, water escapes, and hill stations. This makes the section
-              feel more authentic and much easier to expand later.
+              Four distinct experiences — jungle safaris, ancient monuments, river gorges,
+              and cool hill retreats — each worth a journey on its own, even better combined.
             </p>
           </div>
 
+          {/* Expanded gallery view */}
+          {expanded ? (
+            <div className="mt-12">
+              <div className="mb-6 flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.28em] text-emerald-700">
+                    {categories.find((c) => c.title === expanded)?.meta}
+                  </p>
+                  <h3 className="font-display text-3xl">{expanded}</h3>
+                </div>
+                <button
+                  onClick={() => setExpanded(null)}
+                  className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:shadow"
+                >
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M2 2l12 12M14 2L2 14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                  </svg>
+                  Close
+                </button>
+              </div>
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                {galleryImages[expanded].map((src, i) => (
+                  <div key={src} className="group overflow-hidden rounded-2xl" style={{ aspectRatio: "4/3" }}>
+                    <img
+                      src={src}
+                      alt={`${expanded} ${i + 1}`}
+                      className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
           <div className="mt-12 grid auto-rows-[minmax(240px,auto)] gap-6 md:grid-cols-4">
             {categories.map((category) => (
               <article
                 key={category.title}
-                className={`group relative overflow-hidden rounded-[2rem] ${category.className}`}
+                onClick={() => setExpanded(category.title)}
+                className={`group relative cursor-pointer overflow-hidden rounded-[2rem] ${category.className}`}
               >
                 <img
                   src={category.image}
                   alt={category.title}
                   className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,23,42,0.08),rgba(15,23,42,0.78))]" />
-                <div className="relative flex h-full flex-col justify-end p-7 text-white shadow-[0_22px_70px_rgba(15,23,42,0.18)]">
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,23,42,0.08),rgba(15,23,42,0.78))] transition duration-300 group-hover:bg-[linear-gradient(180deg,rgba(15,23,42,0.18),rgba(15,23,42,0.88))]" />
+                <div className="relative flex h-full flex-col justify-end p-7 text-white">
                   <p className="text-xs font-semibold uppercase tracking-[0.26em] text-white/75">
                     {category.meta}
                   </p>
@@ -240,13 +248,22 @@ function Home() {
                   <p className="mt-3 max-w-sm text-sm leading-7 text-white/85">
                     {category.description}
                   </p>
-                  <p className="mt-4 text-sm font-medium text-[var(--color-gold)]">
-                    {category.subtitle}
-                  </p>
+                  <div className="mt-4 flex items-center justify-between">
+                    <p className="text-sm font-medium text-[var(--color-gold)]">
+                      {category.subtitle}
+                    </p>
+                    <span className="flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white opacity-0 backdrop-blur-sm transition duration-300 group-hover:opacity-100">
+                      View photos
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </span>
+                  </div>
                 </div>
               </article>
             ))}
           </div>
+          )}
         </div>
       </section>
 
