@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Footer from "../components/Footer/Footer";
+import Navbar from "../components/Navbar";
 
 
 const categories = [
@@ -74,43 +75,7 @@ function Home() {
 
   return (
     <div className="bg-[var(--color-cream)] text-slate-950">
-      <nav className="fixed inset-x-0 top-0 z-50">
-        <div className="mx-auto mt-4 flex w-[min(1200px,calc(100%-1.5rem))] items-center justify-between rounded-full border border-white/35 bg-white/75 px-5 py-4 shadow-[0_18px_60px_rgba(15,23,42,0.16)] backdrop-blur-xl md:px-8">
-          <a href="#home" className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-950 text-sm font-semibold text-white">
-              MP
-            </div>
-            <div>
-              <p className="font-display text-xl leading-none">MP Tourism</p>
-              <p className="text-xs uppercase tracking-[0.28em] text-slate-500">
-                Curated journeys
-              </p>
-            </div>
-          </a>
-
-          <div className="hidden items-center gap-8 text-sm font-medium text-slate-700 md:flex">
-            <a href="#home" className="transition hover:text-emerald-700">
-              Home
-            </a>
-            <a href="#categories" className="transition hover:text-emerald-700">
-              Categories
-            </a>
-            <a href="#visit" className="transition hover:text-emerald-700">
-              Why Visit
-            </a>
-            <a href="#planner" className="transition hover:text-emerald-700">
-              AI Planner
-            </a>
-          </div>
-
-          <a
-            href="#categories"
-            className="rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700"
-          >
-            Start Exploring
-          </a>
-        </div>
-      </nav>
+      <Navbar />
 
       <section id="home" className="relative min-h-screen overflow-hidden">
         {/* Hero image — Bhedaghat river gorge */}
