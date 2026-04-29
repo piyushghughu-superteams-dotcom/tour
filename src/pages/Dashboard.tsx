@@ -1,7 +1,7 @@
 import { NavLink, Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import ProfileSetupModal, { type Profile } from "../components/ProfileSetupModal";
-import AiTripPlanner from "./AiTripPlanner";
+
 import InteractiveMap from "./InteractiveMap";
 import SmartCompass from "./SmartCompass";
 import AiBudgetPlanner from "./AiBudgetPlanner";
@@ -142,9 +142,9 @@ function DestinationExplorer() {
           </div>
         </div>
 
-        <div className="mt-8 grid gap-4 xl:grid-cols-[1.15fr_0.85fr]">
-          <div className="rounded-[1.8rem] border border-slate-200 bg-slate-50/70 p-4">
-            <div className="flex items-center gap-3 rounded-[1.4rem] border border-slate-200 bg-white px-4 py-3 shadow-sm">
+        <div className="mt-8 grid gap-6 xl:grid-cols-[1.15fr_0.85fr] items-start">
+          <div className="space-y-5">
+            <div className="flex items-center gap-3 rounded-[1.4rem] border border-slate-200 bg-white px-4 py-3 shadow-sm focus-within:ring-2 focus-within:ring-emerald-500/20 transition-all">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-slate-400">
                 <path d="M21 21l-4.35-4.35M10.8 18a7.2 7.2 0 100-14.4 7.2 7.2 0 000 14.4z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
               </svg>
@@ -172,7 +172,7 @@ function DestinationExplorer() {
               ))}
             </div>
 
-            <div className="mt-5 grid max-h-[620px] gap-3 overflow-y-auto pr-1">
+            <div className="mt-5 grid gap-3">
               {filtered.map((item) => (
                 <button
                   key={item.name}
@@ -208,57 +208,48 @@ function DestinationExplorer() {
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="rounded-[1.8rem] border border-slate-200 bg-[linear-gradient(160deg,rgba(16,185,129,0.14),rgba(14,165,233,0.1))] p-6 shadow-[0_18px_60px_rgba(148,163,184,0.14)]">
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-emerald-800">Selected destination</p>
-              <h2 className="mt-3 font-display text-3xl text-slate-900">{selected.name}</h2>
-              <p className="mt-3 text-sm leading-7 text-slate-600">{selected.description}</p>
-
-              <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                <div className="rounded-2xl bg-white/75 p-4">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">Category</p>
-                  <p className="mt-2 text-sm font-semibold text-slate-900">{selected.category}</p>
-                </div>
-                <div className="rounded-2xl bg-white/75 p-4">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">Region</p>
-                  <p className="mt-2 text-sm font-semibold text-slate-900">{selected.region}</p>
-                </div>
-                <div className="rounded-2xl bg-white/75 p-4 sm:col-span-2">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">Best for</p>
-                  <p className="mt-2 text-sm font-semibold text-slate-900">{selected.bestFor}</p>
+          <div className="sticky top-8 space-y-4">
+            <div className="rounded-[1.8rem] border border-slate-200 bg-white p-2 shadow-[0_18px_60px_rgba(148,163,184,0.14)] overflow-hidden">
+              <div className="p-6">
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-emerald-800">Selected destination</p>
+                <h2 className="mt-3 font-display text-3xl text-slate-900">{selected.name}</h2>
+                <p className="mt-3 text-sm leading-7 text-slate-600 line-clamp-3">{selected.description}</p>
+                
+                <div className="mt-6 grid gap-3 grid-cols-2">
+                  <div className="rounded-2xl bg-slate-50 p-4">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Category</p>
+                    <p className="mt-1 text-sm font-semibold text-slate-900">{selected.category}</p>
+                  </div>
+                  <div className="rounded-2xl bg-slate-50 p-4">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Region</p>
+                    <p className="mt-1 text-sm font-semibold text-slate-900">{selected.region}</p>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="rounded-[1.8rem] border border-slate-200 bg-white/85 p-6 shadow-[0_18px_60px_rgba(148,163,184,0.14)]">
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-emerald-700">Live Atlas Integration</p>
-              <h3 className="mt-3 font-display text-3xl text-slate-900">Map focus: {selected.name}</h3>
-              <p className="mt-3 text-sm leading-7 text-slate-600">
-                The map automatically centers on your selection. Use it to discover nearby landmarks and route context.
-              </p>
-
-              <div className="mt-5 rounded-[1.6rem] border border-slate-200 bg-white p-2 shadow-inner overflow-hidden">
-                <div className="h-80 w-full rounded-[1.1rem] overflow-hidden relative z-10">
-                  <MapContainer
-                    center={[selected.lat, selected.lng]}
-                    zoom={9}
-                    style={{ height: '100%', width: '100%', zIndex: 10 }}
-                    zoomControl={false}
-                  >
-                    <TileLayer
-                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-                      url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-                    />
-                    <MapController center={[selected.lat, selected.lng]} zoom={9} />
-                    <Marker position={[selected.lat, selected.lng]} icon={mapIcon}>
-                      <Popup>
-                        <div className="p-1">
-                          <p className="font-bold text-slate-900">{selected.name}</p>
-                          <p className="text-[10px] text-slate-500">{selected.region}</p>
-                        </div>
-                      </Popup>
-                    </Marker>
-                  </MapContainer>
+              <div className="relative h-72 w-full border-t border-slate-100 overflow-hidden">
+                <MapContainer
+                  center={[selected.lat, selected.lng]}
+                  zoom={9}
+                  style={{ height: '100%', width: '100%', zIndex: 10 }}
+                  zoomControl={false}
+                >
+                  <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+                    url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+                  />
+                  <MapController center={[selected.lat, selected.lng]} zoom={9} />
+                  <Marker position={[selected.lat, selected.lng]} icon={mapIcon}>
+                    <Popup>
+                      <div className="p-1">
+                        <p className="font-bold text-slate-900">{selected.name}</p>
+                        <p className="text-[10px] text-slate-500">{selected.region}</p>
+                      </div>
+                    </Popup>
+                  </Marker>
+                </MapContainer>
+                <div className="absolute top-4 right-4 z-[1000] rounded-full bg-slate-950 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white shadow-xl">
+                  Live Atlas
                 </div>
               </div>
             </div>
@@ -368,104 +359,7 @@ function DestinationCategory({
   );
 }
 
-function DestinationMapPage() {
-  const [selected, setSelected] = useState<Destination>(mpDestinations[0]);
-  const [category, setCategory] = useState("All");
 
-  const categories = ["All", "Wildlife", "Heritage", "Water", "Hills", "Spiritual", "City"];
-
-  const filtered = useMemo(
-    () => mpDestinations.filter((d) => category === "All" || d.category === category),
-    [category]
-  );
-
-  return (
-    <div className="space-y-8">
-      <section className="rounded-[2rem] border border-slate-200 bg-white/85 p-7 shadow-[0_24px_80px_rgba(148,163,184,0.16)] backdrop-blur-xl">
-        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-emerald-700">Destination Map</p>
-        <h1 className="mt-3 font-display text-4xl text-slate-900 md:text-5xl">All MP destinations on one map.</h1>
-        <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-600">
-          Filter by category, pick a destination from the list, and see it pinpointed on our live interactive atlas.
-        </p>
-
-        <div className="mt-6 flex flex-wrap gap-2">
-          {categories.map((c) => (
-            <button
-              key={c}
-              onClick={() => setCategory(c)}
-              className={`rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] transition ${
-                category === c ? "bg-slate-950 text-white" : "border border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:text-slate-900"
-              }`}
-            >
-              {c}
-            </button>
-          ))}
-        </div>
-
-        <div className="mt-6 grid gap-6 xl:grid-cols-[0.7fr_1.3fr]">
-          <div className="max-h-[540px] overflow-y-auto space-y-2 pr-1">
-            {filtered.map((item) => (
-              <button
-                key={item.name}
-                onClick={() => setSelected(item)}
-                className={`w-full rounded-[1.3rem] border p-4 text-left transition ${
-                  selected.name === item.name
-                    ? "border-slate-950 bg-slate-950 text-white"
-                    : "border-slate-200 bg-white text-slate-800 hover:border-slate-300"
-                }`}
-              >
-                <p className="text-sm font-semibold">{item.name}</p>
-                <p className={`mt-1 text-xs uppercase tracking-[0.2em] ${selected.name === item.name ? "text-white/55" : "text-slate-400"}`}>
-                  {item.category} • {item.region}
-                </p>
-              </button>
-            ))}
-          </div>
-
-          <div className="rounded-[1.8rem] border border-slate-200 bg-white p-2 shadow-[0_18px_60px_rgba(148,163,184,0.12)]">
-            <div className="flex items-center justify-between gap-3 p-4">
-              <div>
-                <p className="text-base font-semibold text-slate-900">{selected.name}</p>
-                <p className="mt-1 text-xs uppercase tracking-[0.22em] text-slate-400">{selected.region} • {selected.category}</p>
-              </div>
-              <span className="rounded-full bg-emerald-500 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white">
-                Live Marker
-              </span>
-            </div>
-            <div className="h-[420px] rounded-[1.3rem] overflow-hidden relative z-10 border border-slate-100">
-              <MapContainer
-                center={[selected.lat, selected.lng]}
-                zoom={8}
-                style={{ height: '100%', width: '100%', zIndex: 10 }}
-              >
-                <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-                  url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-                />
-                <MapController center={[selected.lat, selected.lng]} zoom={8} />
-                {filtered.map(dest => (
-                  <Marker 
-                    key={dest.name} 
-                    position={[dest.lat, dest.lng]} 
-                    icon={mapIcon}
-                    eventHandlers={{ click: () => setSelected(dest) }}
-                  >
-                    <Popup>
-                      <div className="p-1">
-                        <p className="font-bold text-slate-900">{dest.name}</p>
-                        <p className="text-[10px] text-slate-500">{dest.region}</p>
-                      </div>
-                    </Popup>
-                  </Marker>
-                ))}
-              </MapContainer>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-  );
-}
 
 const STYLE_OPTIONS = ["Adventure Seeker", "Culture Explorer", "Nature Lover", "Luxury Traveler"];
 const DURATION_OPTIONS = ["Weekend", "Short Trip", "Week+", "Long Journey"];
@@ -751,7 +645,7 @@ export default function Dashboard() {
               <Routes>
                 <Route index element={<Navigate to="/dashboard/home" replace />} />
               <Route path="home" element={<DashboardHome profile={profile} onEditProfile={handleEditProfile} />} />
-              <Route path="planner" element={<AiTripPlanner profile={profile} />} />
+
               <Route path="map" element={<InteractiveMap />} />
               <Route path="compass" element={<SmartCompass />} />
               <Route path="itinerary" element={<ComingSoon title="Itinerary Builder" />} />
@@ -761,7 +655,7 @@ export default function Dashboard() {
               <Route path="dest-heritage" element={<DestinationCategory category="Heritage" title="Heritage & History" desc="Temples, forts, ruins, and the cultural depth of MP's most storied destinations." />} />
               <Route path="dest-nature" element={<DestinationCategory category="Hills" title="Nature & Hill Stations" desc="Scenic highlands, waterfalls, and peaceful retreats across MP." extraCategory="Water" />} />
               <Route path="dest-spiritual" element={<DestinationCategory category="Spiritual" title="Spiritual Destinations" desc="Pilgrimage cities, sacred ghats, and temple routes through Madhya Pradesh." />} />
-              <Route path="dest-map" element={<DestinationMapPage />} />
+
               <Route path="hotels" element={<ComingSoon title="Hotels & Stays" />} />
               <Route path="routes" element={<AiRouteOptimizer />} />
               <Route path="weather" element={<SmartAnalyzer />} />

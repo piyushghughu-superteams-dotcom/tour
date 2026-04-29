@@ -157,12 +157,7 @@ export default function DashboardHome({
               >
                 {profile ? "Update AI Profile" : "Initialize Profile"}
               </button>
-              <NavLink
-                to="/dashboard/planner"
-                className="rounded-full border border-white/30 bg-white/10 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition hover:bg-white/20"
-              >
-                Launch Planner
-              </NavLink>
+
             </div>
           </div>
 

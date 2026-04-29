@@ -226,12 +226,7 @@ export default function InteractiveMap() {
                   </div>
                   
                   <div className="mt-8 grid grid-cols-2 gap-3">
-                    <button 
-                      onClick={() => navigate('/dashboard/planner')}
-                      className="w-full py-2.5 bg-slate-900 text-white text-xs rounded-lg font-semibold hover:bg-slate-800 transition shadow-lg shadow-slate-900/10"
-                    >
-                      Plan Trip Here
-                    </button>
+
                     <button 
                       className="w-full py-2.5 bg-white text-slate-700 border border-slate-200 text-xs rounded-lg font-semibold hover:bg-slate-50 transition"
                     >
