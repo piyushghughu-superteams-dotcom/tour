@@ -13,6 +13,7 @@ interface RouteStop {
 interface RouteResult {
   from: string;
   to: string;
+  tripType: string;
   totalDistance: string;
   totalTime: string;
   theme: string;
@@ -24,7 +25,8 @@ export default function AiRouteOptimizer() {
   const [endPoint, setEndPoint] = useState('Ujjain');
   const [pace, setPace] = useState('Food & Culture Focus');
   const [maxHours, setMaxHours] = useState(8);
-  
+  const [tripType, setTripType] = useState('One-Way');
+
   const [mode, setMode] = useState<OptimizerMode>("idle");
   const [loadingText, setLoadingText] = useState("");
   const [result, setResult] = useState<RouteResult | null>(null);
@@ -53,9 +55,9 @@ export default function AiRouteOptimizer() {
 
     setTimeout(() => {
       clearInterval(interval);
-      
+
       let stops: RouteStop[] = [];
-      
+
       if (pace === 'Food & Culture Focus') {
         stops = [
           { time: "07:00 AM", type: "start", title: `Depart from ${startPoint}`, desc: "Start early to beat city traffic and catch the morning breeze." },
@@ -96,15 +98,24 @@ export default function AiRouteOptimizer() {
         stops[2].time = "Arrival";
       }
 
+      if (tripType === 'Round Trip') {
+        const midIdx = Math.floor(stops.length / 2);
+        stops[midIdx].title = `Reach ${endPoint}`;
+        stops[midIdx].desc = "Explore the primary destination before beginning the return leg.";
+        stops[stops.length - 1].title = `Return to ${startPoint}`;
+        stops[stops.length - 1].desc = "Arrive back at your origin to complete the round trip.";
+      }
+
       setResult({
         from: startPoint,
         to: endPoint,
-        totalDistance: "~425 km",
+        tripType,
+        totalDistance: tripType === 'Round Trip' ? "~850 km" : "~425 km",
         totalTime: pace === 'Direct & Fast' ? "6.5 Hours" : `${maxHours} Hours`,
         theme: pace,
         stops
       });
-      
+
       setMode("done");
     }, 2800);
   }
@@ -127,7 +138,7 @@ export default function AiRouteOptimizer() {
 
   return (
     <div className="flex flex-col xl:flex-row h-[calc(100vh-9rem)] min-h-[600px] overflow-hidden bg-slate-50/50 rounded-[2rem] border border-slate-200 shadow-sm backdrop-blur-xl">
-      
+
       {/* Left Panel: Configuration */}
       <div className="w-full xl:w-[420px] flex-shrink-0 border-b xl:border-b-0 xl:border-r border-slate-200 bg-white/80 flex flex-col h-full overflow-y-auto">
         <div className="p-8">
@@ -141,8 +152,8 @@ export default function AiRouteOptimizer() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-3">Origin</label>
-                <select 
-                  value={startPoint} 
+                <select
+                  value={startPoint}
                   onChange={(e) => setStartPoint(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 outline-none focus:border-emerald-500"
                 >
@@ -151,8 +162,8 @@ export default function AiRouteOptimizer() {
               </div>
               <div>
                 <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-3">Destination</label>
-                <select 
-                  value={endPoint} 
+                <select
+                  value={endPoint}
                   onChange={(e) => setEndPoint(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 outline-none focus:border-emerald-500"
                 >
@@ -162,15 +173,33 @@ export default function AiRouteOptimizer() {
             </div>
 
             <div>
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-3">Trip Layout</label>
+              <div className="flex bg-slate-100 p-1.5 rounded-xl border border-slate-200">
+                <button
+                  onClick={() => setTripType('One-Way')}
+                  className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${tripType === 'One-Way' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}
+                >
+                  One-Way
+                </button>
+                <button
+                  onClick={() => setTripType('Round Trip')}
+                  className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${tripType === 'Round Trip' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}
+                >
+                  Round Trip
+                </button>
+              </div>
+            </div>
+
+            <div>
               <div className="flex justify-between items-end mb-3">
                 <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-500">Max Travel Duration</label>
                 <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">{maxHours} Hours</span>
               </div>
-              <input 
-                type="range" 
-                min="4" 
-                max="10" 
-                value={maxHours} 
+              <input
+                type="range"
+                min="4"
+                max="10"
+                value={maxHours}
                 onChange={(e) => setMaxHours(parseInt(e.target.value))}
                 className="w-full accent-emerald-500 cursor-pointer"
               />
@@ -187,11 +216,10 @@ export default function AiRouteOptimizer() {
                   <button
                     key={p}
                     onClick={() => setPace(p)}
-                    className={`text-left px-5 py-3.5 rounded-xl border transition-all ${
-                      pace === p 
-                      ? 'bg-slate-900 border-slate-900 text-white shadow-md' 
+                    className={`text-left px-5 py-3.5 rounded-xl border transition-all ${pace === p
+                      ? 'bg-slate-900 border-slate-900 text-white shadow-md'
                       : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
-                    }`}
+                      }`}
                   >
                     <span className="font-semibold text-sm">{p}</span>
                   </button>
@@ -200,9 +228,9 @@ export default function AiRouteOptimizer() {
             </div>
           </div>
         </div>
-        
+
         <div className="mt-auto p-8 bg-white border-t border-slate-200 sticky bottom-0 z-10">
-          <button 
+          <button
             onClick={optimize}
             disabled={mode === 'optimizing' || startPoint === endPoint}
             className="w-full rounded-full bg-[linear-gradient(135deg,#10b981,#0f766e)] px-6 py-4 text-sm font-bold text-white transition hover:scale-[1.02] disabled:bg-slate-400 disabled:hover:scale-100 flex justify-center items-center gap-3 shadow-[0_8px_24px_rgba(16,185,129,0.25)]"
@@ -229,9 +257,9 @@ export default function AiRouteOptimizer() {
         {mode === 'idle' ? (
           <div className="h-full flex flex-col items-center justify-center text-center max-w-lg mx-auto">
             <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-[2rem] bg-white shadow-[0_16px_32px_rgba(148,163,184,0.15)] text-emerald-500">
-               <svg className="w-12 h-12 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-               </svg>
+              <svg className="w-12 h-12 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+              </svg>
             </div>
             <h2 className="font-display text-4xl text-slate-900 mb-4">Awaiting Endpoints</h2>
             <p className="text-slate-500 max-w-md mx-auto leading-relaxed text-sm">
@@ -240,101 +268,122 @@ export default function AiRouteOptimizer() {
           </div>
         ) : mode === 'optimizing' ? (
           <div className="h-full flex flex-col items-center justify-center max-w-lg mx-auto text-center">
-             <div className="relative w-32 h-32 mb-10 flex items-center justify-center">
-               <div className="absolute inset-0 rounded-full border-2 border-emerald-500/20 border-t-emerald-500 animate-spin" style={{ animationDuration: '1s' }}></div>
-               <div className="absolute inset-4 rounded-full border-2 border-slate-300 border-b-emerald-400 animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
-               <svg className="w-8 h-8 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-               </svg>
-             </div>
-             <h3 className="font-display text-3xl text-slate-900 mb-3 tracking-wide">Plotting Waypoints...</h3>
-             <p className="text-emerald-600 text-sm tracking-widest uppercase font-bold animate-pulse">{loadingText}</p>
+            <div className="relative w-32 h-32 mb-10 flex items-center justify-center">
+              <div className="absolute inset-0 rounded-full border-2 border-emerald-500/20 border-t-emerald-500 animate-spin" style={{ animationDuration: '1s' }}></div>
+              <div className="absolute inset-4 rounded-full border-2 border-slate-300 border-b-emerald-400 animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
+              <svg className="w-8 h-8 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <h3 className="font-display text-3xl text-slate-900 mb-3 tracking-wide">Plotting Waypoints...</h3>
+            <p className="text-emerald-600 text-sm tracking-widest uppercase font-bold animate-pulse">{loadingText}</p>
           </div>
         ) : result ? (
-          <div className="w-full max-w-5xl mx-auto pb-10 animate-in fade-in slide-in-from-bottom-8 duration-700">
-            
-            {/* Header Map Visualization */}
-            <div className="relative h-[220px] shrink-0 rounded-[2rem] overflow-hidden mb-10 bg-slate-900 shadow-[0_20px_60px_rgba(148,163,184,0.2)] flex items-center justify-between px-10 xl:px-20 border border-slate-800">
-              <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(#334155 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
-              
-              {/* Route Line */}
-              <div className="absolute top-1/2 left-10 right-10 h-0.5 bg-slate-700 -translate-y-1/2 overflow-hidden">
-                <div className="h-full bg-emerald-500 w-full animate-[slideRight_2s_ease-out]"></div>
-              </div>
+          <div className="w-full h-full pb-6 animate-in fade-in zoom-in-95 duration-700">
+            <div className="relative w-full bg-slate-100 rounded-[2rem] border border-slate-200 shadow-inner overflow-hidden flex flex-col" style={{ minHeight: `${Math.max(1200, result.stops.length * 280)}px` }}>
 
-              {/* Endpoints */}
-              <div className="relative z-10 flex flex-col items-center">
-                <div className="w-4 h-4 rounded-full bg-emerald-400 shadow-[0_0_15px_rgba(52,211,153,0.5)] mb-3"></div>
-                <h3 className="text-2xl font-display text-white">{result.from}</h3>
-                <p className="text-[10px] uppercase tracking-widest text-slate-400 mt-1">Origin</p>
-              </div>
+              {/* Map Background Grid */}
+              <div className="absolute inset-0 opacity-40" style={{ backgroundImage: 'radial-gradient(#94a3b8 1.5px, transparent 1.5px)', backgroundSize: '32px 32px' }}></div>
 
-              <div className="relative z-10 flex flex-col items-center bg-slate-900 px-6 py-2 rounded-full border border-slate-700">
-                <p className="text-xs font-bold text-emerald-400">{result.totalDistance}</p>
-                <p className="text-[10px] text-slate-400 mt-0.5">{result.totalTime}</p>
-              </div>
-
-              <div className="relative z-10 flex flex-col items-center">
-                <div className="w-4 h-4 rounded-full bg-[var(--color-gold)] shadow-[0_0_15px_rgba(250,204,21,0.4)] mb-3"></div>
-                <h3 className="text-2xl font-display text-white">{result.to}</h3>
-                <p className="text-[10px] uppercase tracking-widest text-slate-400 mt-1">Destination</p>
-              </div>
-            </div>
-
-            {/* Itinerary Timeline */}
-            <div className="bg-white rounded-[2rem] border border-slate-200 shadow-[0_20px_60px_rgba(148,163,184,0.12)] p-8 xl:p-12">
-              <div className="flex justify-between items-end mb-10 pb-6 border-b border-slate-100">
-                <div>
-                  <h2 className="text-2xl font-display text-slate-900">Step-by-Step Road Guide</h2>
-                  <p className="text-sm text-slate-500 mt-2">Optimized for {result.theme} &middot; Max {maxHours} Hours</p>
+              {/* Badges Overlay */}
+              <div className="absolute top-8 left-8 right-8 flex justify-between z-10 pointer-events-none">
+                <div className="bg-white/90 backdrop-blur-md px-5 py-4 rounded-2xl shadow-xl border border-slate-200">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Origin</p>
+                  <h2 className="text-xl font-display text-slate-900">{result.from}</h2>
                 </div>
-                <div className="px-4 py-2 bg-emerald-50 text-emerald-700 text-xs font-bold uppercase tracking-widest rounded-lg">
-                  {result.stops.length} Stops Plotted
+                <div className="bg-slate-900/90 backdrop-blur-md px-6 py-4 rounded-2xl shadow-xl border border-slate-700 text-center">
+                  <p className="text-sm font-bold text-emerald-400">{result.totalDistance}</p>
+                  <p className="text-xs text-slate-300 mt-0.5">{result.totalTime} &middot; {result.tripType}</p>
+                </div>
+                <div className="bg-white/90 backdrop-blur-md px-5 py-4 rounded-2xl shadow-xl border border-slate-200 text-right">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">{result.tripType === 'Round Trip' ? 'Return To' : 'Destination'}</p>
+                  <h2 className="text-xl font-display text-slate-900">{result.tripType === 'Round Trip' ? result.from : result.to}</h2>
                 </div>
               </div>
 
-              <div className="relative">
-                {/* Vertical Line */}
-                <div className="absolute left-16 top-4 bottom-4 w-px bg-slate-200"></div>
+              {/* The Map Canvas */}
+              <div className="absolute inset-x-0 top-[120px] bottom-10">
+                {(() => {
+                  const N = result.stops.length;
+                  const frequency = N > 6 ? 2.5 : 1.5;
 
-                <div className="space-y-10">
-                  {result.stops.map((stop, idx) => (
-                    <div key={idx} className="relative flex items-start gap-8 group">
-                      
-                      {/* Time */}
-                      <div className="w-24 shrink-0 text-right pt-2">
-                        <span className="text-sm font-bold text-slate-900">{stop.time}</span>
-                      </div>
+                  // Generate SVG path for the winding road
+                  const points = [];
+                  for (let i = 2; i <= 98; i += 1) { // 2% to 98% height
+                    const x = 50 + Math.sin((i / 100) * Math.PI * frequency) * 35;
+                    points.push(`${x} ${i}`);
+                  }
+                  const pathD = `M ${points[0]} L ` + points.slice(1).join(' L ');
 
-                      {/* Icon Node */}
-                      <div className="relative z-10 shrink-0 mt-1">
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 bg-white ${stopColors[stop.type].split(' ')[2]} ${stopColors[stop.type].split(' ')[1]} transition-transform group-hover:scale-110 shadow-sm`}>
-                          {stopIcons[stop.type]}
-                        </div>
-                      </div>
+                  return (
+                    <>
+                      {/* Winding Road SVG */}
+                      <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none" viewBox="0 0 100 100">
+                        <path d={pathD} fill="none" stroke="#cbd5e1" strokeWidth="6" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+                        <path
+                          d={pathD}
+                          fill="none"
+                          stroke="#3b82f6"
+                          strokeWidth="6"
+                          strokeLinecap="round"
+                          vectorEffect="non-scaling-stroke"
+                          style={{ strokeDasharray: 200, strokeDashoffset: 200, animation: 'drawRoute 3s ease-out forwards' }}
+                        />
+                      </svg>
 
-                      {/* Content Card */}
-                      <div className={`flex-1 rounded-[1.5rem] p-6 border transition-all hover:shadow-md ${
-                        stop.type === 'start' || stop.type === 'end' 
-                        ? 'bg-slate-50 border-slate-200' 
-                        : 'bg-white border-slate-200 hover:border-emerald-200'
-                      }`}>
-                        <div className="flex justify-between items-start mb-2">
-                          <h4 className="text-lg font-bold text-slate-900">{stop.title}</h4>
-                          {stop.distanceFromLast && (
-                            <span className="text-xs font-semibold text-slate-400 bg-slate-100 px-2 py-1 rounded-md">
-                              +{stop.distanceFromLast}
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-sm text-slate-600 leading-relaxed">{stop.desc}</p>
-                      </div>
+                      {/* Plotted Stops */}
+                      {result.stops.map((stop, idx) => {
+                        // Map stop index to a Y percentage from 10% to 90%
+                        const yPercent = 10 + (idx / (N - 1)) * 80;
+                        const xPercent = 50 + Math.sin((yPercent / 100) * Math.PI * frequency) * 35;
 
-                    </div>
-                  ))}
-                </div>
+                        // Determine if point is on the right side of the screen
+                        const isRightSide = xPercent > 50;
+
+                        return (
+                          <div
+                            key={idx}
+                            className="absolute group z-20"
+                            style={{ top: `${yPercent}%`, left: `${xPercent}%`, transform: 'translate(-50%, -50%)' }}
+                          >
+                            {/* Map Node */}
+                            <div className="relative z-20 flex items-center justify-center cursor-pointer transition-transform group-hover:scale-125">
+                              {idx === 0 ? (
+                                <div className="w-5 h-5 rounded-full border-[4px] border-blue-500 bg-white ring-4 ring-white shadow-md"></div>
+                              ) : idx === N - 1 ? (
+                                <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center ring-4 ring-white shadow-md">
+                                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                                </div>
+                              ) : (
+                                <div className="w-4 h-4 rounded-full bg-blue-500 ring-4 ring-white shadow-md"></div>
+                              )}
+                            </div>
+
+                            {/* Stop Card */}
+                            <div className={`absolute top-1/2 -translate-y-1/2 w-[320px] bg-white rounded-2xl p-5 shadow-[0_10px_40px_rgba(0,0,0,0.08)] border border-slate-200 transition-all z-10 ${isRightSide ? 'right-full mr-6 group-hover:-translate-x-2' : 'left-full ml-6 group-hover:translate-x-2'
+                              }`}>
+                              <div className="flex items-center gap-3 mb-2">
+                                <h4 className="text-base font-bold text-slate-900 leading-tight">{stop.title}</h4>
+                                {stop.type === 'food' && <span className="text-[10px] uppercase font-bold tracking-widest text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-100">Food</span>}
+                                {stop.type === 'sight' && <span className="text-[10px] uppercase font-bold tracking-widest text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">Sight</span>}
+                                {stop.type === 'rest' && <span className="text-[10px] uppercase font-bold tracking-widest text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-100">Rest</span>}
+                              </div>
+                              <p className="text-sm text-slate-500 leading-relaxed mb-3">{stop.desc}</p>
+                              <div className="flex items-center justify-between text-xs font-bold border-t border-slate-100 pt-3 mt-1">
+                                <span className="text-blue-600 flex items-center gap-1.5">
+                                  <svg className="w-3.5 h-3.5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                  {stop.time}
+                                </span>
+                                {stop.distanceFromLast && <span className="text-slate-400 bg-slate-50 px-2 py-1 rounded-md">+{stop.distanceFromLast}</span>}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </>
+                  );
+                })()}
               </div>
-
             </div>
           </div>
         ) : null}

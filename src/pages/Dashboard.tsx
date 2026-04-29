@@ -11,6 +11,7 @@ import AiRouteOptimizer from "./AiRouteOptimizer";
 const PROFILE_STORAGE_KEY = "mp-tourism-profile";
 
 import DashboardSidebar from "../components/DashboardSidebar";
+import DashboardHome from "./DashboardHome";
 
 type Destination = {
   name: string;
@@ -41,59 +42,6 @@ const mpDestinations: Destination[] = [
   { name: "Tamia", category: "Hills", region: "Chhindwara", description: "A quieter highland destination for travelers who want scenic views beyond the usual circuit.", bestFor: "Offbeat hill travel" },
 ];
 
-function dashboardPath(path: string) {
-  return `/dashboard/${path}`;
-}
-
-function getProfileSummary(profile: Profile) {
-  const interests = profile.interests.slice(0, 3).join(", ");
-
-  return {
-    greeting: `Welcome${profile.name ? `, ${profile.name}` : ""}`,
-    focus: profile.style || "Flexible Traveler",
-    duration: profile.duration || "Short Trip",
-    budget: profile.budget || "Mid Range",
-    groupSize: profile.groupSize || "Solo",
-    interests: interests || "Wildlife, heritage, and scenic escapes",
-  };
-}
-
-function buildGuidedPlan(profile: Profile) {
-  const styleRoutes: Record<string, string[]> = {
-    "Adventure Seeker": ["Kanha or Pench safari", "Bhedaghat river stretch", "Pachmarhi viewpoints"],
-    "Culture Explorer": ["Khajuraho temples", "Orchha heritage stay", "Gwalior fort circuit"],
-    "Nature Lover": ["Pachmarhi hill retreat", "Waterfront and falls", "Forest-edge slow stays"],
-    "Luxury Traveler": ["Premium safari lodge", "Boutique heritage stay", "Private scenic transfers"],
-  };
-
-  const route = styleRoutes[profile.style] || ["Wildlife circuit", "Heritage stop", "Nature retreat"];
-
-  const cards = [
-    {
-      title: "Arrival and first anchor",
-      detail: `Begin with ${profile.interests[0] || "your top interest"} and keep day one light and flexible.`,
-    },
-    {
-      title: "Stay and pacing",
-      detail: `Match hotels and activities to your ${profile.budget || "preferred"} budget for ${profile.groupSize || "your group"}.`,
-    },
-    {
-      title: "Route intelligence",
-      detail: `Use ${profile.style || "your travel style"} to balance movement, rest time, and sightseeing density.`,
-    },
-    {
-      title: "Final day rhythm",
-      detail: `Close with a scenic stop or easier return leg rather than a rushed finish.`,
-    },
-  ];
-
-  return {
-    title: `${profile.duration || "Short Trip"} AI-guided route`,
-    subtitle: `Built around ${profile.interests.length ? profile.interests.join(", ") : "your chosen interests"}.`,
-    route,
-    cards,
-  };
-}
 
 function ComingSoon({ title }: { title: string }) {
   return (
@@ -286,185 +234,6 @@ function DestinationExplorer() {
 
 
 
-function DashboardHome({
-  profile,
-  onEditProfile,
-}: {
-  profile: Profile | null;
-  onEditProfile: () => void;
-}) {
-  const summary = profile ? getProfileSummary(profile) : null;
-  const guidedPlan = useMemo(() => (profile ? buildGuidedPlan(profile) : null), [profile]);
-
-  return (
-    <div className="space-y-8">
-      <section className="relative overflow-hidden rounded-[2.3rem] bg-slate-950 p-8 text-white shadow-[0_32px_100px_rgba(15,23,42,0.26)] md:p-10 xl:p-12">
-        <img
-          src="/images/hills/four.jpg"
-          alt="Madhya Pradesh landscape"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-[linear-gradient(110deg,rgba(2,6,23,0.86),rgba(2,6,23,0.54)_46%,rgba(2,6,23,0.72)),linear-gradient(180deg,rgba(2,6,23,0.2),rgba(2,6,23,0.74))]" />
-
-        <div className="relative grid gap-8 xl:grid-cols-[1.12fr_0.88fr] xl:items-end">
-          <div className="max-w-3xl">
-            <div className="inline-flex rounded-full border border-emerald-300/20 bg-emerald-400/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-emerald-100">
-              AI tourism dashboard
-            </div>
-            <h1 className="mt-6 font-display text-4xl leading-tight text-white md:text-6xl">
-              {summary ? "Your MP trip, shaped into a smarter plan." : "A dashboard that feels like a real AI travel platform."}
-            </h1>
-            <p className="mt-5 max-w-2xl text-sm leading-8 text-slate-200 md:text-base">
-              {summary
-                ? `Built for ${summary.focus.toLowerCase()} travelers on a ${summary.duration.toLowerCase()} with a ${summary.budget.toLowerCase()} budget for ${summary.groupSize.toLowerCase()}.`
-                : "Use AI to shape itineraries, route decisions, and stay selection while keeping Madhya Pradesh and its destinations at the center."}
-            </p>
-
-            <div className="mt-8 flex flex-wrap gap-4">
-              <button
-                onClick={onEditProfile}
-                className="rounded-full bg-[var(--color-gold)] px-6 py-3 text-sm font-semibold text-slate-950 transition hover:brightness-110"
-              >
-                {profile ? "Update Travel Profile" : "Build Travel Profile"}
-              </button>
-              <NavLink
-                to="/dashboard/planner"
-                className="rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-md transition hover:bg-white/16"
-              >
-                Open AI Planner
-              </NavLink>
-            </div>
-
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              {[
-                { value: summary?.duration ?? "4", label: "Trip profile" },
-                { value: summary?.groupSize ?? "Solo", label: "Travel group" },
-                { value: profile?.interests.length ? `${profile.interests.length}` : "4", label: "Interest signals" },
-                { value: "AI", label: "Route intelligence" },
-              ].map((item) => (
-                <div key={item.label} className="rounded-3xl border border-white/12 bg-white/10 p-5 backdrop-blur-xl">
-                  <p className="font-display text-3xl text-[var(--color-gold)]">{item.value}</p>
-                  <p className="mt-2 text-sm text-slate-200">{item.label}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="rounded-[2rem] border border-white/12 bg-[linear-gradient(180deg,rgba(30,41,59,0.78),rgba(15,23,42,0.85))] p-6 backdrop-blur-xl">
-            <div className="flex items-center justify-between gap-4">
-              <p className="text-xs uppercase tracking-[0.28em] text-white/60">AI route preview</p>
-              <span className="rounded-full border border-emerald-300/20 bg-emerald-400/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-emerald-200">
-                matched
-              </span>
-            </div>
-            <h2 className="mt-4 font-display text-3xl text-white">
-              {guidedPlan ? guidedPlan.title : "Profile-aware itinerary planning"}
-            </h2>
-            <p className="mt-3 text-sm leading-7 text-slate-300">
-              {guidedPlan
-                ? guidedPlan.subtitle
-                : "Start with your traveler profile, then let the dashboard turn it into a route suggestion, pacing logic, and stay recommendations."}
-            </p>
-
-            <div className="mt-6 space-y-3">
-              {(guidedPlan?.route ?? ["Wildlife circuit", "Heritage stop", "Hill and river escape"]).map((item, index) => (
-                <div key={item} className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-gold)] text-xs font-bold text-slate-950">
-                    {index + 1}
-                  </span>
-                  <p className="text-sm text-slate-100">{item}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-        <div className="rounded-[2rem] border border-slate-200 bg-white/85 p-7 shadow-[0_24px_80px_rgba(148,163,184,0.16)] backdrop-blur-xl">
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-emerald-700">Guided Plan</p>
-              <h2 className="mt-3 font-display text-3xl text-slate-900">Profile-led planning dashboard</h2>
-            </div>
-            <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-500">
-              Live profile
-            </span>
-          </div>
-
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
-            {(guidedPlan?.cards ?? [
-              { title: "Route shape", detail: "Use the travel profile to suggest a sensible order of destinations." },
-              { title: "Pacing logic", detail: "Prevent overpacked routes and keep transfer times more realistic." },
-              { title: "Stay matching", detail: "Suggest stays based on budget and group size rather than a generic list." },
-              { title: "Experience mix", detail: "Balance wildlife, culture, hills, and water-based experiences." },
-            ]).map((card) => (
-              <div key={card.title} className="rounded-[1.6rem] border border-slate-100 bg-slate-50/80 p-5">
-                <p className="text-sm font-semibold text-slate-900">{card.title}</p>
-                <p className="mt-2 text-sm leading-7 text-slate-600">{card.detail}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          {[
-            { label: "Travel style", value: summary?.focus ?? "Not set" },
-            { label: "Trip duration", value: summary?.duration ?? "Not set" },
-            { label: "Budget", value: summary?.budget ?? "Not set" },
-            { label: "Travellers", value: summary?.groupSize ?? "Not set" },
-          ].map((item) => (
-            <div key={item.label} className="rounded-[1.8rem] border border-slate-200 bg-white/85 p-6 shadow-[0_18px_60px_rgba(148,163,184,0.14)] backdrop-blur-xl">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">{item.label}</p>
-              <p className="mt-3 font-display text-2xl text-slate-900">{item.value}</p>
-            </div>
-          ))}
-          <div className="rounded-[1.8rem] border border-slate-200 bg-[linear-gradient(160deg,rgba(16,185,129,0.16),rgba(14,165,233,0.12))] p-6 shadow-[0_18px_60px_rgba(148,163,184,0.14)] sm:col-span-2">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-800">Top interests</p>
-            <p className="mt-3 font-display text-2xl text-slate-900">{summary?.interests ?? "Not set"}</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="rounded-[2rem] border border-slate-200 bg-white/85 p-7 shadow-[0_24px_80px_rgba(148,163,184,0.16)] backdrop-blur-xl">
-        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-emerald-700">Platform Tools</p>
-            <h2 className="mt-3 font-display text-3xl text-slate-900">The AI platform layer for the trip.</h2>
-          </div>
-          <p className="max-w-xl text-sm leading-7 text-slate-600">
-            These tools should feel like part of one product system, not separate utilities. The dashboard now uses the same tone and styling language as the homepage.
-          </p>
-        </div>
-
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {[
-            { label: "AI Trip Planner", desc: "Build itinerary direction from the saved profile", color: "#10b981", path: "planner" },
-            { label: "Smart Atlas", desc: "Discover destinations with Wikipedia AI", color: "#0ea5e9", path: "map" },
-            { label: "Hotels & Stays", desc: "Match stay type to route and budget", color: "#f59e0b", path: "hotels" },
-            { label: "Road Guide", desc: "Connect scenic movement with practical planning", color: "#ef4444", path: "routes" },
-            { label: "Itinerary Builder", desc: "Turn route ideas into day-by-day structure", color: "#3b82f6", path: "itinerary" },
-            { label: "Budget Planner", desc: "Estimate cost range across your chosen route", color: "#ec4899", path: "budget" },
-            { label: "Destinations", desc: "Browse MP places by experience category", color: "#14b8a6", path: "destinations" },
-            { label: "Best Time to Visit", desc: "Check seasonality before finalizing the trip", color: "#f97316", path: "weather" },
-          ].map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path.startsWith("/") ? item.path : dashboardPath(item.path)}
-              className="group rounded-[1.6rem] border border-slate-100 bg-slate-50/70 p-5 transition hover:-translate-y-0.5 hover:border-slate-200 hover:bg-white hover:shadow-[0_18px_40px_rgba(148,163,184,0.14)]"
-            >
-              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-2xl" style={{ background: `${item.color}18`, border: `1px solid ${item.color}25` }}>
-                <span className="h-2.5 w-2.5 rounded-full" style={{ background: item.color }} />
-              </div>
-              <p className="text-sm font-bold text-slate-800">{item.label}</p>
-              <p className="mt-2 text-xs leading-6 text-slate-500">{item.desc}</p>
-            </NavLink>
-          ))}
-        </div>
-      </section>
-    </div>
-  );
-}
 
 const categoryColors: Record<string, string> = {
   Wildlife: "#10b981",
@@ -846,16 +615,16 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[var(--color-cream)]">
+    <div className="relative h-screen overflow-hidden bg-[var(--color-cream)]">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.08),transparent_26%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.07),transparent_24%)]" />
 
       {showProfileModal && <ProfileSetupModal onComplete={handleComplete} onSkip={handleSkip} />}
 
-      <div className="relative flex min-h-screen">
+      <div className="relative flex h-full overflow-hidden">
         <DashboardSidebar collapsed={collapsed} setCollapsed={setCollapsed} />
 
-        <main className="flex-1">
-          <div className="sticky top-0 z-20 border-b border-white/50 bg-white/60 backdrop-blur-xl">
+        <main className="flex-1 flex flex-col min-w-0 h-full">
+          <div className="sticky top-0 z-20 shrink-0 border-b border-white/50 bg-white/60 backdrop-blur-xl">
             <div className="mx-auto flex max-w-[1600px] items-center justify-between px-5 py-4 md:px-8">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">AI Tourism Platform</p>
@@ -899,9 +668,10 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="mx-auto max-w-[1600px] px-5 py-6 md:px-8 md:py-8">
-            <Routes>
-              <Route index element={<Navigate to="/dashboard/home" replace />} />
+          <div className="flex-1 overflow-y-auto">
+            <div className="mx-auto max-w-[1600px] px-5 py-6 md:px-8 md:py-8">
+              <Routes>
+                <Route index element={<Navigate to="/dashboard/home" replace />} />
               <Route path="home" element={<DashboardHome profile={profile} onEditProfile={handleEditProfile} />} />
               <Route path="planner" element={<AiTripPlanner profile={profile} />} />
               <Route path="map" element={<InteractiveMap />} />
@@ -919,8 +689,9 @@ export default function Dashboard() {
               <Route path="weather" element={<SmartAnalyzer />} />
             </Routes>
           </div>
-        </main>
-      </div>
+        </div>
+      </main>
+    </div>
       <style>{`
         @keyframes dropIn {
           from { opacity: 0; transform: translateY(-8px) scale(0.97); }
