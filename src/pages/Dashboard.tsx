@@ -6,6 +6,7 @@ import InteractiveMap from "./InteractiveMap";
 import SmartCompass from "./SmartCompass";
 import AiBudgetPlanner from "./AiBudgetPlanner";
 import SmartAnalyzer from "./SmartAnalyzer";
+import AiRouteOptimizer from "./AiRouteOptimizer";
 
 const PROFILE_STORAGE_KEY = "mp-tourism-profile";
 
@@ -914,7 +915,7 @@ export default function Dashboard() {
               <Route path="dest-spiritual" element={<DestinationCategory category="Spiritual" title="Spiritual Destinations" desc="Pilgrimage cities, sacred ghats, and temple routes through Madhya Pradesh." />} />
               <Route path="dest-map" element={<DestinationMapPage />} />
               <Route path="hotels" element={<ComingSoon title="Hotels & Stays" />} />
-              <Route path="routes" element={<ComingSoon title="Road Guide" />} />
+              <Route path="routes" element={<AiRouteOptimizer />} />
               <Route path="weather" element={<SmartAnalyzer />} />
             </Routes>
           </div>
