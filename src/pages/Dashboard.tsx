@@ -14,6 +14,8 @@ import DashboardSidebar from "../components/DashboardSidebar";
 import DashboardHome from "./DashboardHome";
 import DestinationExplorer from "./DestinationExplorer";
 import AiTripPlanner from "./AiTripPlanner";
+import HotelsAndStays from "./HotelsAndStays";
+
 
 function ComingSoon({ title }: { title: string }) {
   return (
@@ -160,8 +162,12 @@ export default function Dashboard() {
                 <Route path="planner" element={<AiTripPlanner />} />
                 <Route path="budget" element={<AiBudgetPlanner />} />
                 <Route path="destinations" element={<DestinationExplorer />} />
+                <Route path="dest-wildlife" element={<DestinationExplorer initialCategory="Wildlife" />} />
+                <Route path="dest-heritage" element={<DestinationExplorer initialCategory="Heritage" />} />
+                <Route path="dest-nature" element={<DestinationExplorer initialCategory="Hills" />} />
+                <Route path="dest-spiritual" element={<DestinationExplorer initialCategory="Spiritual" />} />
 
-                <Route path="hotels" element={<ComingSoon title="Hotels & Stays" />} />
+                <Route path="hotels" element={<HotelsAndStays />} />
                 <Route path="routes" element={<AiRouteOptimizer />} />
                 <Route path="weather" element={<SmartAnalyzer />} />
               </Routes>
