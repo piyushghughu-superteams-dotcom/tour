@@ -102,9 +102,8 @@ function MobileFeatureCycle() {
         {AI_FEATURES.map((_, i) => (
           <span
             key={i}
-            className={`block h-1.5 rounded-full transition-all duration-300 ${
-              i === active ? "w-5 bg-emerald-400" : "w-1.5 bg-slate-600"
-            }`}
+            className={`block h-1.5 rounded-full transition-all duration-300 ${i === active ? "w-5 bg-emerald-400" : "w-1.5 bg-slate-600"
+              }`}
           />
         ))}
       </div>
@@ -133,20 +132,13 @@ export default function DashboardHome({
           alt="Madhya Pradesh"
           className="absolute inset-0 h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/80 via-slate-900/60 to-transparent" />
+        <div className="absolute inset-0 bg-slate-950/50" />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-950/30 to-transparent" />
 
         <div className="relative z-10 w-full px-8 py-12 md:px-14 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-10 items-center">
           {/* Left: text */}
           <div className="max-w-xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/40 bg-emerald-500/15 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.22em] text-emerald-300">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-              </span>
-              AI Core Active
-            </div>
-
-            <h1 className="mt-6 font-display text-4xl md:text-5xl leading-[1.1] text-white drop-shadow">
+            <h1 className="mt-2 text-4xl md:text-5xl leading-[1.1] text-white" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700 }}>
               {summary
                 ? "Your MP trip, refined by intelligence."
                 : "The next generation of travel planning."}

@@ -579,6 +579,37 @@ function MyProfile({
   );
 }
 
+const MARQUEE_ITEMS = [
+  "Kanha National Park",
+  "Khajuraho Temples",
+  "Pachmarhi Hills",
+  "Bhedaghat Marble Rocks",
+  "Orchha Heritage",
+  "Bandhavgarh Tiger Reserve",
+  "Mandu Ruins",
+  "Omkareshwar Ghats",
+  "Pench Safari",
+  "Ujjain Temples",
+];
+
+function TopBarMarquee() {
+  return (
+    <div className="overflow-hidden w-56 md:w-80">
+      <div
+        className="flex gap-8 whitespace-nowrap text-xs font-semibold uppercase tracking-[0.18em] text-slate-400"
+        style={{ animation: "marqueeScroll 18s linear infinite" }}
+      >
+        {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((item, i) => (
+          <span key={i} className="shrink-0 flex items-center gap-2">
+            <span className="inline-block h-1 w-1 rounded-full bg-emerald-400" />
+            {item}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function Dashboard() {
   const [collapsed, setCollapsed] = useState(false);
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -626,14 +657,7 @@ export default function Dashboard() {
         <main className="flex-1 flex flex-col min-w-0 h-full">
           <div className="sticky top-0 z-20 shrink-0 border-b border-white/50 bg-white/60 backdrop-blur-xl">
             <div className="mx-auto flex max-w-[1600px] items-center justify-between px-5 py-4 md:px-8">
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">AI Tourism Platform</p>
-                <div className="mt-2 flex items-center gap-2 text-sm text-slate-500">
-                  <a href="/" className="transition hover:text-slate-900">Home</a>
-                  <span>/</span>
-                  <span className="font-medium text-slate-900">Dashboard</span>
-                </div>
-              </div>
+              <TopBarMarquee />
 
               <div className="relative flex items-center gap-3">
                 <button
