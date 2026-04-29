@@ -449,21 +449,6 @@ export default function AiBudgetPlanner() {
                 ))}
               </div>
 
-              {/* Proceed to Planner */}
-              <div className="bg-slate-900 rounded-[2rem] p-8 text-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(16,185,129,0.2),transparent_50%)] pointer-events-none" />
-                <h3 className="font-display text-2xl text-white mb-2 relative z-10">Happy with this budget?</h3>
-                <p className="text-slate-400 text-sm mb-6 relative z-10 max-w-md mx-auto">
-                  Take this exact financial framework and instantly generate a day-by-day itinerary using our AI Trip Planner.
-                </p>
-                <button 
-                  onClick={() => navigate('/dashboard/planner')}
-                  className="bg-emerald-500 hover:bg-emerald-400 text-white font-bold py-4 px-8 rounded-xl shadow-xl transition relative z-10 w-full sm:w-auto"
-                >
-                  Proceed to Detailed Itinerary Builder
-                </button>
-              </div>
-
             </div>
           )}
         </section>
