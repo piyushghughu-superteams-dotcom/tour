@@ -1,4 +1,6 @@
-import { useState, useMemo } from "react";
+const fs = require('fs');
+
+const content = `import { useState, useMemo } from "react";
 import type { Profile } from "../components/ProfileSetupModal";
 
 const PROFILE_STORAGE_KEY = "mp-tourism-profile";
@@ -129,16 +131,16 @@ export default function AiTripPlanner({ profile: propProfile }: { profile?: Prof
     const nights = numDays - 1;
     const tpl = templates[interest] || templates.Mixed;
     
-    const groupText = pax === 1 ? "solo traveler" : pax === 2 ? "couple" : `${pax}-person group`;
+    const groupText = pax === 1 ? "solo traveler" : pax === 2 ? "couple" : \`\${pax}-person group\`;
     const budgetText = style;
     
-    const dynamicTagline = `A ${budgetText} ${interest.toLowerCase()} experience crafted for your ${groupText}. ${tpl.baseTagline}`;
+    const dynamicTagline = \`A \${budgetText} \${interest.toLowerCase()} experience crafted for your \${groupText}. \${tpl.baseTagline}\`;
 
     // Calculate Finances (from Budget Planner Engine)
     let inboundCostPerHead = inboundTransport === 'flight' ? 6500 : inboundTransport === 'train' ? 2200 : 1200;
-    let inboundDesc = inboundTransport === 'flight' ? `Round-trip economy flights from ${origin || 'home city'} to Indore/Bhopal airport.` 
-                    : inboundTransport === 'train' ? `Round-trip 2AC/3AC train tickets from ${origin || 'home city'}.` 
-                    : `Estimated inter-state fuel and toll taxes from ${origin || 'home city'}.`;
+    let inboundDesc = inboundTransport === 'flight' ? \`Round-trip economy flights from \${origin || 'home city'} to Indore/Bhopal airport.\` 
+                    : inboundTransport === 'train' ? \`Round-trip 2AC/3AC train tickets from \${origin || 'home city'}.\` 
+                    : \`Estimated inter-state fuel and toll taxes from \${origin || 'home city'}.\`;
     const inboundTotal = inboundCostPerHead * pax;
 
     let vehicle = pax > 4 ? "Innova Crysta / SUV" : "Sedan (Dzire/Etios)";
@@ -151,8 +153,8 @@ export default function AiTripPlanner({ profile: propProfile }: { profile?: Prof
       : (numDays * 500 * pax);
     
     let localDesc = localTransport === 'private_cab' 
-      ? `Dedicated ${vehicle} with driver for ${numDays} days. Includes driver allowance of ₹300/day.` 
-      : `Self-drive rental car including estimated fuel costs for ~${estKms} kms.`;
+      ? \`Dedicated \${vehicle} with driver for \${numDays} days. Includes driver allowance of ₹300/day.\` 
+      : \`Self-drive rental car including estimated fuel costs for ~\${estKms} kms.\`;
 
     let nightlyRate = style === 'luxury' ? 12000 : style === 'comfort' ? 4500 : 1800;
     const hotelTotal = nightlyRate * rooms * nights;
@@ -192,7 +194,7 @@ export default function AiTripPlanner({ profile: propProfile }: { profile?: Prof
 
       generatedDays.push({
         day: i + 1,
-        title: `${tpl.locations[locIdx]} ${hasSafari ? 'Safari' : 'Exploration'}`,
+        title: \`\${tpl.locations[locIdx]} \${hasSafari ? 'Safari' : 'Exploration'}\`,
         location: tpl.locations[locIdx],
         morning: morningActivities[mIdx],
         afternoon: afternoonActivities[aIdx],
@@ -206,7 +208,7 @@ export default function AiTripPlanner({ profile: propProfile }: { profile?: Prof
 
     const tips = [
       { 
-        title: `Optimized for ${pax} Travelers`, 
+        title: \`Optimized for \${pax} Travelers\`, 
         body: pax === 1 
           ? "We've focused your route around safe, well-connected areas with reliable transit options and friendly stays." 
           : pax > 8 
@@ -214,7 +216,7 @@ export default function AiTripPlanner({ profile: propProfile }: { profile?: Prof
           : "Your group size is ideal for splitting private vehicle hires, which often provides more comfort at a lower per-head cost." 
       },
       { 
-        title: `${style.charAt(0).toUpperCase() + style.slice(1)} Financial Approach`, 
+        title: \`\${style.charAt(0).toUpperCase() + style.slice(1)} Financial Approach\`, 
         body: style === "budget" 
           ? "Opt for state transport or shared jeeps where possible to easily stick to this budget constraint without missing out." 
           : style === "luxury" 
@@ -226,7 +228,7 @@ export default function AiTripPlanner({ profile: propProfile }: { profile?: Prof
         body: numDays < 3 
           ? "This is a very short trip. Expect dense sightseeing and minimal downtime. October to March is the ideal season." 
           : numDays > 7 
-          ? `With ${numDays} days, you can maintain a relaxed pace. We've built in rest periods to prevent travel fatigue.` 
+          ? \`With \${numDays} days, you can maintain a relaxed pace. We've built in rest periods to prevent travel fatigue.\` 
           : "October to March is ideal. If traveling in summer, expect high temperatures but excellent wildlife sightings at waterholes." 
       }
     ];
@@ -334,11 +336,11 @@ export default function AiTripPlanner({ profile: propProfile }: { profile?: Prof
                   <button
                     key={opt}
                     onClick={() => setInterest(opt)}
-                    className={`rounded-full px-4 py-2 text-xs font-semibold transition-all ${
+                    className={\`rounded-full px-4 py-2 text-xs font-semibold transition-all \${
                       interest === opt 
                         ? "bg-slate-900 text-white shadow-md" 
                         : "border border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:text-slate-900"
-                    }`}
+                    }\`}
                   >
                     {opt}
                   </button>
@@ -376,7 +378,7 @@ export default function AiTripPlanner({ profile: propProfile }: { profile?: Prof
                 ].map(s => (
                   <button
                     key={s.id} onClick={() => setStyle(s.id)}
-                    className={`py-2 rounded-xl text-xs font-bold uppercase tracking-wide border transition ${style === s.id ? 'bg-slate-900 border-slate-900 text-white shadow-md' : 'bg-slate-50 border-slate-200 text-slate-500'}`}
+                    className={\`py-2 rounded-xl text-xs font-bold uppercase tracking-wide border transition \${style === s.id ? 'bg-slate-900 border-slate-900 text-white shadow-md' : 'bg-slate-50 border-slate-200 text-slate-500'}\`}
                   >
                     {s.label}
                   </button>
@@ -395,7 +397,7 @@ export default function AiTripPlanner({ profile: propProfile }: { profile?: Prof
                 ].map(t => (
                   <button
                     key={t.id} onClick={() => setInboundTransport(t.id)}
-                    className={`py-2 rounded-xl text-xs font-bold border transition ${inboundTransport === t.id ? 'bg-emerald-50 border-emerald-500 text-emerald-700' : 'bg-slate-50 border-slate-200 text-slate-500'}`}
+                    className={\`py-2 rounded-xl text-xs font-bold border transition \${inboundTransport === t.id ? 'bg-emerald-50 border-emerald-500 text-emerald-700' : 'bg-slate-50 border-slate-200 text-slate-500'}\`}
                   >
                     {t.label}
                   </button>
@@ -404,15 +406,15 @@ export default function AiTripPlanner({ profile: propProfile }: { profile?: Prof
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Local Transit</label>
+              <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Local Transit inside MP</label>
               <div className="grid grid-cols-2 gap-2">
                 {[
-                  { id: 'private_cab', label: 'Private Cab' },
-                  { id: 'public', label: 'Public/Shared' }
+                  { id: 'private_cab', label: 'Private Dedicated Cab' },
+                  { id: 'public', label: 'Public / Shared' }
                 ].map(t => (
                   <button
                     key={t.id} onClick={() => setLocalTransport(t.id)}
-                    className={`py-2 px-3 rounded-xl text-xs font-bold border transition ${localTransport === t.id ? 'bg-emerald-50 border-emerald-500 text-emerald-700' : 'bg-slate-50 border-slate-200 text-slate-500'}`}
+                    className={\`py-2 px-3 rounded-xl text-xs font-bold border transition \${localTransport === t.id ? 'bg-emerald-50 border-emerald-500 text-emerald-700' : 'bg-slate-50 border-slate-200 text-slate-500'}\`}
                   >
                     {t.label}
                   </button>
@@ -438,7 +440,7 @@ export default function AiTripPlanner({ profile: propProfile }: { profile?: Prof
                 Processing...
               </>
             ) : (
-              "Generate Itinerary & Budget"
+              "Generate Full Itinerary & Budget"
             )}
           </button>
         </div>
@@ -467,7 +469,7 @@ export default function AiTripPlanner({ profile: propProfile }: { profile?: Prof
              <p className="text-emerald-600 text-sm leading-7 animate-pulse font-semibold">{loadingText}</p>
           </div>
         ) : plan ? (
-          <div className="max-w-5xl mx-auto pb-10 animate-in fade-in slide-in-from-bottom-8 duration-700">
+          <div className="max-w-5xl mx-auto pb-10">
              <div className="mb-10">
                <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-700 mb-4 shadow-sm">
                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
@@ -500,11 +502,11 @@ export default function AiTripPlanner({ profile: propProfile }: { profile?: Prof
                  <button
                    key={tab.id}
                    onClick={() => setActiveTab(tab.id)}
-                   className={`pb-4 px-4 text-sm font-bold uppercase tracking-[0.1em] transition-all border-b-2 ${
+                   className={\`pb-4 px-4 text-sm font-bold uppercase tracking-[0.1em] transition-all border-b-2 \${
                      activeTab === tab.id 
                        ? 'border-emerald-500 text-emerald-600' 
                        : 'border-transparent text-slate-400 hover:text-slate-800 hover:border-slate-300'
-                   }`}
+                   }\`}
                  >
                    {tab.label}
                  </button>
@@ -520,42 +522,39 @@ export default function AiTripPlanner({ profile: propProfile }: { profile?: Prof
                      <button
                        key={idx}
                        onClick={() => setActiveDay(idx)}
-                       className={`flex items-start text-left p-4 rounded-2xl transition-all whitespace-nowrap lg:whitespace-normal border ${
+                       className={\`flex items-start text-left p-4 rounded-2xl transition-all whitespace-nowrap lg:whitespace-normal border \${
                          activeDay === idx 
                            ? 'bg-slate-900 border-slate-900 text-white shadow-[0_8px_20px_rgba(15,23,42,0.12)]' 
                            : 'bg-white border-slate-200 hover:border-slate-300 text-slate-600'
-                       }`}
+                       }\`}
                      >
-                       <span className={`font-display text-xl mr-4 ${activeDay === idx ? 'text-emerald-400' : 'text-slate-400'}`}>
+                       <span className={\`font-display text-xl mr-4 \${activeDay === idx ? 'text-emerald-400' : 'text-slate-400'}\`}>
                          D{day.day}
                        </span>
                        <div>
                          <span className="font-semibold text-sm leading-relaxed mt-0.5 block">{day.location}</span>
-                         <span className={`text-[10px] uppercase tracking-widest font-bold mt-2 block ${activeDay === idx ? 'text-slate-400' : 'text-emerald-600'}`}>{formatCurrency(day.dailyCost)} / Day</span>
+                         <span className={\`text-[10px] uppercase tracking-widest font-bold mt-2 block \${activeDay === idx ? 'text-slate-400' : 'text-emerald-600'}\`}>{formatCurrency(day.dailyCost)}</span>
                        </div>
                      </button>
                    ))}
                  </div>
                  
                  {/* Day Details */}
-                 <div className="flex-1 bg-white rounded-[2rem] border border-slate-200 shadow-[0_20px_60px_rgba(148,163,184,0.12)] p-7 xl:p-10 relative overflow-hidden">
-                   <div className="absolute top-0 right-0 p-8 text-slate-100 font-display text-9xl opacity-30 select-none pointer-events-none">
-                     {plan.days[activeDay].day}
-                   </div>
-                   <div className="flex flex-col gap-4 mb-8 relative z-10">
+                 <div className="flex-1 bg-white rounded-[2rem] border border-slate-200 shadow-[0_20px_60px_rgba(148,163,184,0.12)] p-7 xl:p-10">
+                   <div className="flex items-center justify-between mb-8">
                      <div className="flex items-center gap-4">
                        <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700 font-display text-2xl">
                          {plan.days[activeDay].day}
                        </span>
                        <h2 className="font-display text-3xl text-slate-900">{plan.days[activeDay].title}</h2>
                      </div>
-                     <div className="bg-emerald-50/50 border border-emerald-100 rounded-xl px-4 py-3 self-start shadow-sm">
-                       <div className="text-[10px] font-bold uppercase tracking-widest text-emerald-600">Calculated Burn Rate</div>
-                       <div className="font-display text-xl text-slate-900">{formatCurrency(plan.days[activeDay].dailyCost)}</div>
+                     <div className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-right">
+                       <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Day Burn Rate</div>
+                       <div className="font-display text-lg text-slate-900">{formatCurrency(plan.days[activeDay].dailyCost)}</div>
                      </div>
                    </div>
                    
-                   <div className="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-slate-200 z-10">
+                   <div className="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-slate-200">
                      {/* Morning */}
                      <div className="relative flex items-start gap-6">
                         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-4 border-white bg-amber-100 text-amber-500 shadow-sm z-10 mt-1">
@@ -588,9 +587,9 @@ export default function AiTripPlanner({ profile: propProfile }: { profile?: Prof
                      </div>
                    </div>
 
-                   <div className="mt-8 grid gap-4 sm:grid-cols-2 relative z-10">
+                   <div className="mt-8 grid gap-4 sm:grid-cols-2">
                       <div className="flex items-center gap-4 rounded-[1.4rem] border border-slate-200 bg-white p-5 shadow-sm">
-                         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+                         <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
                            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
                          </div>
                          <div>
@@ -600,7 +599,7 @@ export default function AiTripPlanner({ profile: propProfile }: { profile?: Prof
                          </div>
                       </div>
                       <div className="flex items-center gap-4 rounded-[1.4rem] border border-slate-200 bg-white p-5 shadow-sm">
-                         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-amber-50 text-amber-600">
+                         <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-50 text-amber-600">
                            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z" /></svg>
                          </div>
                          <div>
@@ -615,59 +614,46 @@ export default function AiTripPlanner({ profile: propProfile }: { profile?: Prof
 
              {activeTab === 'budget' && (
                <div className="bg-white rounded-[2rem] border border-slate-200 shadow-[0_20px_60px_rgba(148,163,184,0.12)] p-7 xl:p-10 max-w-4xl mx-auto">
-                 <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">
-                   <div>
-                     <h2 className="font-display text-3xl text-slate-900">Financial Breakdown</h2>
-                     <p className="text-sm text-slate-500 mt-2">Calculated accurately using our AI Budget Planner engine.</p>
-                   </div>
-                   <div className="bg-[linear-gradient(135deg,#10b981,#0f766e)] text-white px-6 py-4 rounded-2xl shadow-lg w-full md:w-auto text-center md:text-left">
+                 <div className="flex items-center justify-between mb-8">
+                   <h2 className="font-display text-3xl text-slate-900">Financial Breakdown</h2>
+                   <div className="bg-[linear-gradient(135deg,#10b981,#0f766e)] text-white px-6 py-3 rounded-2xl shadow-lg">
                      <div className="text-[10px] font-bold uppercase tracking-widest text-emerald-200 mb-1">Grand Total</div>
-                     <div className="font-display text-4xl">{formatCurrency(plan.budget.totalCost)}</div>
-                     <div className="text-xs text-emerald-100 mt-1">{formatCurrency(plan.budget.perPersonCost)} per person</div>
+                     <div className="font-display text-3xl">{formatCurrency(plan.budget.totalCost)}</div>
                    </div>
                  </div>
 
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                    {/* Inbound */}
-                   <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50 shadow-sm">
-                     <div className="flex justify-between items-start mb-3">
-                       <h4 className="font-bold text-slate-800 text-sm uppercase tracking-widest">Transit to MP</h4>
-                       <span className="font-display text-xl text-emerald-600">{formatCurrency(plan.budget.inboundTransport.totalCost)}</span>
-                     </div>
-                     <p className="text-xs text-slate-500 leading-relaxed mb-3">{plan.budget.inboundTransport.description}</p>
-                     <p className="text-xs font-semibold text-slate-700 bg-white p-2 rounded border border-slate-100">Calculated at {formatCurrency(plan.budget.inboundTransport.totalCost / Number(groupSize))} per head.</p>
+                   <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50">
+                     <h4 className="font-bold text-slate-800 text-sm uppercase tracking-widest mb-3">Transit to MP</h4>
+                     <p className="font-display text-2xl text-emerald-600 mb-3">{formatCurrency(plan.budget.inboundTransport.totalCost)}</p>
+                     <p className="text-xs text-slate-500 leading-relaxed">{plan.budget.inboundTransport.description}</p>
                    </div>
                    {/* Local */}
-                   <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50 shadow-sm">
-                     <div className="flex justify-between items-start mb-3">
-                       <h4 className="font-bold text-slate-800 text-sm uppercase tracking-widest">Local Transit</h4>
-                       <span className="font-display text-xl text-emerald-600">{formatCurrency(plan.budget.localTransport.totalCost)}</span>
-                     </div>
+                   <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50">
+                     <h4 className="font-bold text-slate-800 text-sm uppercase tracking-widest mb-3">Local Cabs / Taxis</h4>
+                     <p className="font-display text-2xl text-emerald-600 mb-3">{formatCurrency(plan.budget.localTransport.totalCost)}</p>
                      <p className="text-xs text-slate-500 leading-relaxed mb-3">{plan.budget.localTransport.description}</p>
-                     <p className="text-xs font-semibold text-slate-700 bg-white p-2 rounded border border-slate-100">
-                       Base: {formatCurrency(plan.budget.localTransport.dailyRate)}/day | {formatCurrency(plan.budget.localTransport.perKmRate)}/km
+                     <p className="text-xs font-semibold text-slate-700 bg-white p-2 rounded border border-slate-200">
+                       Base: {formatCurrency(plan.budget.localTransport.dailyRate)}/day | Per Km: {formatCurrency(plan.budget.localTransport.perKmRate)}
                      </p>
                    </div>
                    {/* Accommodation */}
-                   <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50 shadow-sm">
-                     <div className="flex justify-between items-start mb-3">
-                       <h4 className="font-bold text-slate-800 text-sm uppercase tracking-widest">Accommodation</h4>
-                       <span className="font-display text-xl text-emerald-600">{formatCurrency(plan.budget.accommodation.totalCost)}</span>
-                     </div>
+                   <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50">
+                     <h4 className="font-bold text-slate-800 text-sm uppercase tracking-widest mb-3">Accommodation</h4>
+                     <p className="font-display text-2xl text-emerald-600 mb-3">{formatCurrency(plan.budget.accommodation.totalCost)}</p>
                      <p className="text-xs text-slate-500 leading-relaxed mb-3">
                        {plan.budget.accommodation.nights} Nights in {plan.budget.accommodation.category} class properties. Needs {plan.budget.accommodation.roomsNeeded} room(s).
                      </p>
-                     <p className="text-xs font-semibold text-slate-700 bg-white p-2 rounded border border-slate-100">
+                     <p className="text-xs font-semibold text-slate-700 bg-white p-2 rounded border border-slate-200">
                        Avg Nightly Rate: {formatCurrency(plan.budget.accommodation.avgNightlyRate)} / room
                      </p>
                    </div>
                    {/* Food & Activities */}
-                   <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50 shadow-sm">
-                     <div className="flex justify-between items-start mb-3">
-                       <h4 className="font-bold text-slate-800 text-sm uppercase tracking-widest">Food & Activities</h4>
-                       <span className="font-display text-xl text-emerald-600">{formatCurrency(plan.budget.foodAndActivities.totalCost)}</span>
-                     </div>
-                     <div className="text-xs font-semibold text-slate-700 bg-white p-2 rounded border border-slate-100 flex flex-col gap-1">
+                   <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50">
+                     <h4 className="font-bold text-slate-800 text-sm uppercase tracking-widest mb-3">Food & Activities</h4>
+                     <p className="font-display text-2xl text-emerald-600 mb-3">{formatCurrency(plan.budget.foodAndActivities.totalCost)}</p>
+                     <div className="text-xs font-semibold text-slate-700 bg-white p-2 rounded border border-slate-200 flex flex-col gap-1">
                        <span>Daily Food Allowance: {formatCurrency(plan.budget.foodAndActivities.dailyFoodPerHead)}/head</span>
                        {plan.budget.foodAndActivities.activities.map((act, i) => (
                          <span key={i}>+ {act.name}: {formatCurrency(act.cost)} {act.perHead ? '/ head' : 'total'}</span>
@@ -697,3 +683,6 @@ export default function AiTripPlanner({ profile: propProfile }: { profile?: Prof
     </div>
   );
 }
+`
+
+fs.writeFileSync('src/pages/AiTripPlanner.tsx', content);

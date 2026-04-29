@@ -5,6 +5,7 @@ import AiTripPlanner from "./AiTripPlanner";
 import InteractiveMap from "./InteractiveMap";
 import SmartCompass from "./SmartCompass";
 import AiBudgetPlanner from "./AiBudgetPlanner";
+import SmartAnalyzer from "./SmartAnalyzer";
 
 const PROFILE_STORAGE_KEY = "mp-tourism-profile";
 
@@ -914,7 +915,7 @@ export default function Dashboard() {
               <Route path="dest-map" element={<DestinationMapPage />} />
               <Route path="hotels" element={<ComingSoon title="Hotels & Stays" />} />
               <Route path="routes" element={<ComingSoon title="Road Guide" />} />
-              <Route path="weather" element={<ComingSoon title="Best Time to Visit" />} />
+              <Route path="weather" element={<SmartAnalyzer />} />
             </Routes>
           </div>
         </main>
