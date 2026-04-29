@@ -12,6 +12,40 @@ const PROFILE_STORAGE_KEY = "mp-tourism-profile";
 
 import DashboardSidebar from "../components/DashboardSidebar";
 import DashboardHome from "./DashboardHome";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
+// Fix for default Leaflet icon paths
+import iconUrl from 'leaflet/dist/images/marker-icon.png';
+import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
+import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
+
+L.Marker.prototype.options.icon = L.icon({
+  iconUrl,
+  iconRetinaUrl,
+  shadowUrl,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
+const mapIcon = L.divIcon({
+  className: 'custom-map-marker',
+  html: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="8" fill="#10b981" stroke="white" stroke-width="2"/></svg>`,
+  iconSize: [24, 24],
+  iconAnchor: [12, 12],
+  popupAnchor: [0, -12],
+});
+
+function MapController({ center, zoom }: { center: [number, number]; zoom: number }) {
+  const map = useMap();
+  useEffect(() => {
+    map.flyTo(center, zoom, { animate: true, duration: 1.5 });
+  }, [center, zoom, map]);
+  return null;
+}
 
 type Destination = {
   name: string;
@@ -19,27 +53,29 @@ type Destination = {
   region: string;
   description: string;
   bestFor: string;
+  lat: number;
+  lng: number;
 };
 
 const mpDestinations: Destination[] = [
-  { name: "Kanha National Park", category: "Wildlife", region: "Mandla", description: "One of MP's best-known tiger reserve landscapes with deep forest drives and rich wildlife viewing.", bestFor: "Safaris and forest stays" },
-  { name: "Bandhavgarh National Park", category: "Wildlife", region: "Umaria", description: "A high-interest tiger reserve known for dramatic sightings and strong safari appeal.", bestFor: "Short premium wildlife trips" },
-  { name: "Pench National Park", category: "Wildlife", region: "Seoni", description: "Forest routes, wildlife drives, and a strong nature-focused circuit for MP travelers.", bestFor: "Safari-focused itineraries" },
-  { name: "Pachmarhi", category: "Hills", region: "Narmadapuram", description: "MP's classic hill station with viewpoints, caves, waterfalls, and slower scenic pacing.", bestFor: "Hill retreats and nature breaks" },
-  { name: "Khajuraho", category: "Heritage", region: "Chhatarpur", description: "Historic temple architecture and one of the most iconic cultural destinations in the state.", bestFor: "Heritage and architecture" },
-  { name: "Orchha", category: "Heritage", region: "Niwari", description: "A heritage town of cenotaphs, palaces, and riverside history with a relaxed atmosphere.", bestFor: "Culture-led routes" },
-  { name: "Gwalior", category: "Heritage", region: "Gwalior", description: "Fort architecture, old-city character, and one of MP's strongest historical stopovers.", bestFor: "Forts and city heritage" },
-  { name: "Mandu", category: "Heritage", region: "Dhar", description: "Romantic ruins, elevated views, and a strong monsoon-season heritage destination.", bestFor: "Scenic heritage travel" },
-  { name: "Bhedaghat", category: "Water", region: "Jabalpur", description: "Marble rocks, river views, and one of MP's most visual and memorable natural attractions.", bestFor: "Boat rides and river landscapes" },
-  { name: "Dhuandhar Falls", category: "Water", region: "Jabalpur", description: "A dramatic falls stop that works well with the Bhedaghat circuit.", bestFor: "Waterfront sightseeing" },
-  { name: "Omkareshwar", category: "Spiritual", region: "Khandwa", description: "A sacred island destination with temple routes and riverfront atmosphere.", bestFor: "Spiritual travel" },
-  { name: "Ujjain", category: "Spiritual", region: "Ujjain", description: "A major pilgrimage city and one of the strongest spiritual circuits in MP.", bestFor: "Temple and ritual routes" },
-  { name: "Maheshwar", category: "Spiritual", region: "Khargone", description: "A quieter heritage-spiritual destination with ghats, weaving traditions, and river views.", bestFor: "Slow riverside stays" },
-  { name: "Bhimbetka", category: "Heritage", region: "Raisen", description: "Historic rock shelters and a strong stop for prehistory and cultural depth.", bestFor: "History and archaeology" },
-  { name: "Sanchi", category: "Heritage", region: "Raisen", description: "A landmark Buddhist heritage site that fits well into central MP routes.", bestFor: "Cultural day trips" },
-  { name: "Bhopal", category: "City", region: "Bhopal", description: "The state capital with lakes, museums, and a strong position for route planning.", bestFor: "City base and regional access" },
-  { name: "Indore", category: "City", region: "Indore", description: "A major city base for food, mobility, and access to western MP circuits.", bestFor: "Urban base and food stops" },
-  { name: "Tamia", category: "Hills", region: "Chhindwara", description: "A quieter highland destination for travelers who want scenic views beyond the usual circuit.", bestFor: "Offbeat hill travel" },
+  { name: "Kanha National Park", category: "Wildlife", region: "Mandla", description: "One of MP's best-known tiger reserve landscapes with deep forest drives and rich wildlife viewing.", bestFor: "Safaris and forest stays", lat: 22.3345, lng: 80.6115 },
+  { name: "Bandhavgarh National Park", category: "Wildlife", region: "Umaria", description: "A high-interest tiger reserve known for dramatic sightings and strong safari appeal.", bestFor: "Short premium wildlife trips", lat: 23.7225, lng: 81.0245 },
+  { name: "Pench National Park", category: "Wildlife", region: "Seoni", description: "Forest routes, wildlife drives, and a strong nature-focused circuit for MP travelers.", bestFor: "Safari-focused itineraries", lat: 21.6521, lng: 79.2274 },
+  { name: "Pachmarhi", category: "Hills", region: "Narmadapuram", description: "MP's classic hill station with viewpoints, caves, waterfalls, and slower scenic pacing.", bestFor: "Hill retreats and nature breaks", lat: 22.4674, lng: 78.4346 },
+  { name: "Khajuraho", category: "Heritage", region: "Chhatarpur", description: "Historic temple architecture and one of the most iconic cultural destinations in the state.", bestFor: "Heritage and architecture", lat: 24.8318, lng: 79.9199 },
+  { name: "Orchha", category: "Heritage", region: "Niwari", description: "A heritage town of cenotaphs, palaces, and riverside history with a relaxed atmosphere.", bestFor: "Culture-led routes", lat: 25.3503, lng: 78.6436 },
+  { name: "Gwalior", category: "Heritage", region: "Gwalior", description: "Fort architecture, old-city character, and one of MP's strongest historical stopovers.", bestFor: "Forts and city heritage", lat: 26.2313, lng: 78.1695 },
+  { name: "Mandu", category: "Heritage", region: "Dhar", description: "Romantic ruins, elevated views, and a strong monsoon-season heritage destination.", bestFor: "Scenic heritage travel", lat: 22.3275, lng: 75.4057 },
+  { name: "Bhedaghat", category: "Water", region: "Jabalpur", description: "Marble rocks, river views, and one of MP's most visual and memorable natural attractions.", bestFor: "Boat rides and river landscapes", lat: 23.1293, lng: 79.8021 },
+  { name: "Dhuandhar Falls", category: "Water", region: "Jabalpur", description: "A dramatic falls stop that works well with the Bhedaghat circuit.", bestFor: "Waterfront sightseeing", lat: 23.1206, lng: 79.7997 },
+  { name: "Omkareshwar", category: "Spiritual", region: "Khandwa", description: "A sacred island destination with temple routes and riverfront atmosphere.", bestFor: "Spiritual travel", lat: 22.2458, lng: 76.1471 },
+  { name: "Ujjain", category: "Spiritual", region: "Ujjain", description: "A major pilgrimage city and one of the strongest spiritual circuits in MP.", bestFor: "Temple and ritual routes", lat: 23.1827, lng: 75.7682 },
+  { name: "Maheshwar", category: "Spiritual", region: "Khargone", description: "A quieter heritage-spiritual destination with ghats, weaving traditions, and river views.", bestFor: "Slow riverside stays", lat: 22.1764, lng: 75.5869 },
+  { name: "Bhimbetka", category: "Heritage", region: "Raisen", description: "Historic rock shelters and a strong stop for prehistory and cultural depth.", bestFor: "History and archaeology", lat: 22.9372, lng: 77.6126 },
+  { name: "Sanchi", category: "Heritage", region: "Raisen", description: "A landmark Buddhist heritage site that fits well into central MP routes.", bestFor: "Cultural day trips", lat: 23.4871, lng: 77.7397 },
+  { name: "Bhopal", category: "City", region: "Bhopal", description: "The state capital with lakes, museums, and a strong position for route planning.", bestFor: "City base and regional access", lat: 23.2599, lng: 77.4126 },
+  { name: "Indore", category: "City", region: "Indore", description: "A major city base for food, mobility, and access to western MP circuits.", bestFor: "Urban base and food stops", lat: 22.7196, lng: 75.8577 },
+  { name: "Tamia", category: "Hills", region: "Chhindwara", description: "A quieter highland destination for travelers who want scenic views beyond the usual circuit.", bestFor: "Offbeat hill travel", lat: 22.3456, lng: 78.6723 },
 ];
 
 
@@ -98,7 +134,7 @@ function DestinationExplorer() {
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-emerald-700">Explore All Places</p>
             <h1 className="mt-3 font-display text-4xl text-slate-900 md:text-5xl">Search Madhya Pradesh from one dashboard list.</h1>
             <p className="mt-4 text-sm leading-7 text-slate-600">
-              This is the core explorer structure for the platform. Later you can attach all your images, richer details, and live Google Maps behavior on top of this same data flow.
+              This is the core explorer structure for the platform. It is fully integrated with our Live Atlas for real-time location context.
             </p>
           </div>
           <div className="rounded-[1.6rem] border border-slate-200 bg-slate-50/80 px-5 py-4 text-sm text-slate-600">
@@ -195,33 +231,34 @@ function DestinationExplorer() {
             </div>
 
             <div className="rounded-[1.8rem] border border-slate-200 bg-white/85 p-6 shadow-[0_18px_60px_rgba(148,163,184,0.14)]">
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-emerald-700">Google Map Integration</p>
-              <h3 className="mt-3 font-display text-3xl text-slate-900">Ready placeholder for the live map.</h3>
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-emerald-700">Live Atlas Integration</p>
+              <h3 className="mt-3 font-display text-3xl text-slate-900">Map focus: {selected.name}</h3>
               <p className="mt-3 text-sm leading-7 text-slate-600">
-                We can connect the Google Map here later so clicking any place from the list opens its marker, route context, and nearby suggestions.
+                The map automatically centers on your selection. Use it to discover nearby landmarks and route context.
               </p>
 
-              <div className="mt-5 rounded-[1.6rem] border border-dashed border-slate-300 bg-slate-50 p-5">
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="text-sm font-semibold text-slate-900">{selected.name}</p>
-                    <p className="mt-1 text-xs uppercase tracking-[0.22em] text-slate-400">{selected.region} • {selected.category}</p>
-                  </div>
-                  <span className="rounded-full bg-slate-950 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white">
-                    Map target
-                  </span>
-                </div>
-
-                <div className="mt-5 flex h-64 items-center justify-center rounded-[1.3rem] bg-[linear-gradient(160deg,rgba(15,23,42,0.96),rgba(30,41,59,0.92))] text-center text-slate-300">
-                  <div className="max-w-xs">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" className="mx-auto text-emerald-300">
-                      <path d="M12 21s7-4.35 7-11a7 7 0 10-14 0c0 6.65 7 11 7 11zM12 13a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                    <p className="mt-4 text-sm font-semibold text-white">Google Map will sit here</p>
-                    <p className="mt-2 text-xs leading-6 text-slate-400">
-                      Live markers, search sync, and nearby discovery can be connected after the API setup.
-                    </p>
-                  </div>
+              <div className="mt-5 rounded-[1.6rem] border border-slate-200 bg-white p-2 shadow-inner overflow-hidden">
+                <div className="h-80 w-full rounded-[1.1rem] overflow-hidden relative z-10">
+                  <MapContainer
+                    center={[selected.lat, selected.lng]}
+                    zoom={9}
+                    style={{ height: '100%', width: '100%', zIndex: 10 }}
+                    zoomControl={false}
+                  >
+                    <TileLayer
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+                      url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+                    />
+                    <MapController center={[selected.lat, selected.lng]} zoom={9} />
+                    <Marker position={[selected.lat, selected.lng]} icon={mapIcon}>
+                      <Popup>
+                        <div className="p-1">
+                          <p className="font-bold text-slate-900">{selected.name}</p>
+                          <p className="text-[10px] text-slate-500">{selected.region}</p>
+                        </div>
+                      </Popup>
+                    </Marker>
+                  </MapContainer>
                 </div>
               </div>
             </div>
@@ -348,7 +385,7 @@ function DestinationMapPage() {
         <p className="text-xs font-semibold uppercase tracking-[0.28em] text-emerald-700">Destination Map</p>
         <h1 className="mt-3 font-display text-4xl text-slate-900 md:text-5xl">All MP destinations on one map.</h1>
         <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-600">
-          Filter by category, pick a destination from the list, and see it pinpointed. Google Maps integration connects here after API setup.
+          Filter by category, pick a destination from the list, and see it pinpointed on our live interactive atlas.
         </p>
 
         <div className="mt-6 flex flex-wrap gap-2">
@@ -385,26 +422,43 @@ function DestinationMapPage() {
             ))}
           </div>
 
-          <div className="rounded-[1.8rem] border border-slate-200 bg-slate-50 p-5">
-            <div className="flex items-center justify-between gap-3 mb-4">
+          <div className="rounded-[1.8rem] border border-slate-200 bg-white p-2 shadow-[0_18px_60px_rgba(148,163,184,0.12)]">
+            <div className="flex items-center justify-between gap-3 p-4">
               <div>
                 <p className="text-base font-semibold text-slate-900">{selected.name}</p>
                 <p className="mt-1 text-xs uppercase tracking-[0.22em] text-slate-400">{selected.region} • {selected.category}</p>
               </div>
-              <span className="rounded-full bg-slate-950 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white">
-                Map target
+              <span className="rounded-full bg-emerald-500 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white">
+                Live Marker
               </span>
             </div>
-            <div className="flex h-[420px] items-center justify-center rounded-[1.3rem] bg-[linear-gradient(160deg,rgba(15,23,42,0.96),rgba(30,41,59,0.92))] text-center text-slate-300">
-              <div className="max-w-xs">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="mx-auto text-emerald-300">
-                  <path d="M12 21s7-4.35 7-11a7 7 0 10-14 0c0 6.65 7 11 7 11zM12 13a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                <p className="mt-4 text-sm font-semibold text-white">{selected.name}</p>
-                <p className="mt-2 text-xs leading-6 text-slate-400">
-                  Google Maps live marker will appear here after API integration.
-                </p>
-              </div>
+            <div className="h-[420px] rounded-[1.3rem] overflow-hidden relative z-10 border border-slate-100">
+              <MapContainer
+                center={[selected.lat, selected.lng]}
+                zoom={8}
+                style={{ height: '100%', width: '100%', zIndex: 10 }}
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+                  url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+                />
+                <MapController center={[selected.lat, selected.lng]} zoom={8} />
+                {filtered.map(dest => (
+                  <Marker 
+                    key={dest.name} 
+                    position={[dest.lat, dest.lng]} 
+                    icon={mapIcon}
+                    eventHandlers={{ click: () => setSelected(dest) }}
+                  >
+                    <Popup>
+                      <div className="p-1">
+                        <p className="font-bold text-slate-900">{dest.name}</p>
+                        <p className="text-[10px] text-slate-500">{dest.region}</p>
+                      </div>
+                    </Popup>
+                  </Marker>
+                ))}
+              </MapContainer>
             </div>
           </div>
         </div>
