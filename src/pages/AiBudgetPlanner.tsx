@@ -320,7 +320,7 @@ export default function AiBudgetPlanner() {
 
             <button
               type="submit" disabled={isGenerating}
-              className={`w-full py-4 rounded-xl font-bold text-white tracking-widest uppercase transition-all shadow-xl flex items-center justify-center gap-3 ${isGenerating ? 'bg-slate-300 cursor-not-allowed shadow-none' : 'bg-[linear-gradient(135deg,#10b981,#0f766e)] hover:scale-[1.02]'}`}
+              className={`w-full rounded-full px-6 py-4 text-sm font-bold text-white transition-all flex items-center justify-center gap-3 ${isGenerating ? 'bg-slate-400 cursor-not-allowed' : 'bg-[linear-gradient(135deg,#10b981,#0f766e)] hover:scale-[1.02] shadow-[0_8px_24px_rgba(16,185,129,0.25)]'}`}
             >
               {isGenerating ? 'Consulting Engine...' : 'Generate Detailed Report'}
             </button>

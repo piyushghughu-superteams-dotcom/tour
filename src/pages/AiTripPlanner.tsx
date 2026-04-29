@@ -427,7 +427,7 @@ export default function AiTripPlanner({ profile: propProfile }: { profile?: Prof
           <button 
             onClick={generate}
             disabled={mode === 'generating'}
-            className="w-full rounded-full bg-emerald-600 px-6 py-4 text-sm font-semibold text-white transition hover:bg-emerald-500 disabled:bg-slate-400 flex justify-center items-center gap-3 shadow-[0_8px_20px_rgba(16,185,129,0.3)]"
+            className="w-full rounded-full bg-[linear-gradient(135deg,#10b981,#0f766e)] px-6 py-4 text-sm font-bold text-white transition hover:scale-[1.02] disabled:bg-slate-400 disabled:hover:scale-100 flex justify-center items-center gap-3 shadow-[0_8px_24px_rgba(16,185,129,0.25)]"
           >
             {mode === 'generating' ? (
               <>
