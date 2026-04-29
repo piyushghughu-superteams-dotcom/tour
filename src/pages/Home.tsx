@@ -58,11 +58,13 @@ const galleryImages: Record<string, string[]> = {
   ],
   "Water Escapes": [
     "/images/waterplaces/one.jpg","/images/waterplaces/two.jpg","/images/waterplaces/three.jpg",
-    "/images/waterplaces/four.jpg","/images/waterplaces/five.jpg",
+    "/images/waterplaces/four.jpg","/images/waterplaces/five.jpg","/images/waterplaces/six.jpg",
+    "/images/waterplaces/seven.jpg","/images/waterplaces/eight.jpg",
   ],
   "Hill Stations": [
     "/images/hills/one.jpg","/images/hills/two.jpg","/images/hills/three.jpeg",
     "/images/hills/four.jpg","/images/hills/five.jpg","/images/hills/six.jpg",
+    "/images/hills/seven.jpg","/images/hills/eight.jpg",
   ],
 };
 
@@ -177,7 +179,7 @@ function Home() {
                 </button>
               </div>
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-                {galleryImages[expanded].map((src, i) => (
+                {galleryImages[expanded].slice(0, 8).map((src, i) => (
                   <div key={src} className="group overflow-hidden rounded-2xl" style={{ aspectRatio: "4/3" }}>
                     <img
                       src={src}
