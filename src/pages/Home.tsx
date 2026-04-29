@@ -119,10 +119,13 @@ function Home() {
                 Explore MP
               </a>
               <a
-                href="#planner"
-                className="rounded-full border border-white/25 bg-white/10 px-8 py-4 text-sm font-semibold text-white backdrop-blur-md transition hover:bg-white/18"
+                href="/dashboard"
+                className="rounded-full border border-white/25 bg-white/10 px-8 py-4 text-sm font-semibold text-white backdrop-blur-md transition hover:bg-white/18 flex items-center gap-2"
               >
-                Plan My Trip
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Open AI Dashboard
               </a>
             </div>
           </div>
@@ -310,12 +313,23 @@ function Home() {
 
             <AIFeatureCards />
 
-            <a
-              href="#planner"
-              className="mt-7 inline-flex rounded-full bg-[var(--color-gold)] px-6 py-3 text-sm font-semibold text-slate-950 transition hover:scale-[1.02]"
-            >
-              Plan a Smarter Route
-            </a>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <a
+                href="/dashboard"
+                className="inline-flex items-center gap-2 rounded-full bg-[var(--color-gold)] px-6 py-3 text-sm font-semibold text-slate-950 transition hover:scale-[1.02]"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Open AI Dashboard
+              </a>
+              <a
+                href="/dashboard/planner"
+                className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/14"
+              >
+                Try AI Planner →
+              </a>
+            </div>
           </div>
 
         </div>

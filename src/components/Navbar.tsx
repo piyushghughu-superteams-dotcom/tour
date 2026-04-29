@@ -145,7 +145,7 @@ export default function Navbar() {
               { label: "Home", href: "#home" },
               { label: "Categories", href: "#categories" },
               { label: "Why Visit", href: "#visit" },
-              { label: "AI Planner", href: "#planner" },
+              { label: "AI Planner", href: "/dashboard/planner" },
             ].map((link) => (
               <a
                 key={link.label}
@@ -158,9 +158,9 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* CTA — same style, adds AI sparkle icon */}
+          {/* CTA */}
           <a
-            href="#categories"
+            href="/dashboard"
             className="flex items-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700"
           >
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0">
