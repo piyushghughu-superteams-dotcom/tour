@@ -2,6 +2,7 @@ import { NavLink, Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import ProfileSetupModal, { type Profile } from "../components/ProfileSetupModal";
 import AiTripPlanner from "./AiTripPlanner";
+import InteractiveMap from "./InteractiveMap";
 
 const PROFILE_STORAGE_KEY = "mp-tourism-profile";
 
@@ -16,7 +17,7 @@ const navItems = [
     group: "AI Tools",
     items: [
       { path: "planner", label: "AI Trip Planner", icon: "M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" },
-      { path: "map", label: "Interactive Map", icon: "M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" },
+      { path: "map", label: "Smart Atlas", icon: "M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" },
       { path: "itinerary", label: "Itinerary Builder", icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" },
       { path: "budget", label: "Budget Planner", icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" },
     ],
@@ -314,46 +315,7 @@ function DestinationExplorer() {
   );
 }
 
-function MapWorkspace() {
-  return (
-    <div className="space-y-8">
-      <section className="rounded-[2rem] border border-slate-200 bg-white/85 p-7 shadow-[0_24px_80px_rgba(148,163,184,0.16)] backdrop-blur-xl">
-        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-emerald-700">Interactive Map</p>
-        <h1 className="mt-3 font-display text-4xl text-slate-900 md:text-5xl">Map workspace for Google Maps integration.</h1>
-        <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-600">
-          This page is ready to become the actual Google Maps surface of the platform. The destinations explorer already gives us the searchable place list we can connect here next.
-        </p>
 
-        <div className="mt-8 grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-          <div className="rounded-[1.8rem] bg-[linear-gradient(145deg,rgba(2,6,23,0.96),rgba(15,23,42,0.9))] p-5 text-white shadow-[0_24px_80px_rgba(15,23,42,0.22)]">
-            <div className="flex h-[460px] items-center justify-center rounded-[1.4rem] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.12),transparent_28%),linear-gradient(180deg,rgba(30,41,59,0.78),rgba(15,23,42,0.92))]">
-              <div className="max-w-sm text-center">
-                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-emerald-200">Future Google Map</p>
-                <h2 className="mt-4 font-display text-3xl">Live routes, markers, and destination discovery.</h2>
-                <p className="mt-4 text-sm leading-7 text-slate-300">
-                  Once the API is integrated, this area can support marker clicks, route previews, place highlighting, and synced search from the explorer.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid gap-4">
-            {[
-              "Search any MP tourist destination from one master list",
-              "Open a place on the map instantly from the explorer",
-              "Show nearby destinations and route combinations",
-              "Later connect hotels, routes, and AI plan suggestions here",
-            ].map((item) => (
-              <div key={item} className="rounded-[1.6rem] border border-slate-200 bg-white p-5 shadow-[0_14px_40px_rgba(148,163,184,0.12)]">
-                <p className="text-sm leading-7 text-slate-700">{item}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    </div>
-  );
-}
 
 function DashboardHome({
   profile,
@@ -509,7 +471,7 @@ function DashboardHome({
         <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {[
             { label: "AI Trip Planner", desc: "Build itinerary direction from the saved profile", color: "#10b981", path: "planner" },
-            { label: "Interactive Map", desc: "See route logic visually across MP", color: "#0ea5e9", path: "map" },
+            { label: "Smart Atlas", desc: "Discover destinations with Wikipedia AI", color: "#0ea5e9", path: "map" },
             { label: "Hotels & Stays", desc: "Match stay type to route and budget", color: "#f59e0b", path: "hotels" },
             { label: "Road Guide", desc: "Connect scenic movement with practical planning", color: "#ef4444", path: "routes" },
             { label: "Itinerary Builder", desc: "Turn route ideas into day-by-day structure", color: "#3b82f6", path: "itinerary" },
@@ -1040,7 +1002,7 @@ export default function Dashboard() {
               <Route index element={<Navigate to="/dashboard/home" replace />} />
               <Route path="home" element={<DashboardHome profile={profile} onEditProfile={handleEditProfile} />} />
               <Route path="planner" element={<AiTripPlanner profile={profile} />} />
-              <Route path="map" element={<MapWorkspace />} />
+              <Route path="map" element={<InteractiveMap />} />
               <Route path="itinerary" element={<ComingSoon title="Itinerary Builder" />} />
               <Route path="budget" element={<ComingSoon title="Budget Planner" />} />
               <Route path="destinations" element={<DestinationExplorer />} />
