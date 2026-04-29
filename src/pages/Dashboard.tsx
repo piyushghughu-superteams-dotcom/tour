@@ -3,6 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 import ProfileSetupModal, { type Profile } from "../components/ProfileSetupModal";
 import AiTripPlanner from "./AiTripPlanner";
 import InteractiveMap from "./InteractiveMap";
+import SmartCompass from "./SmartCompass";
+import AiBudgetPlanner from "./AiBudgetPlanner";
 
 const PROFILE_STORAGE_KEY = "mp-tourism-profile";
 
@@ -901,8 +903,9 @@ export default function Dashboard() {
               <Route path="home" element={<DashboardHome profile={profile} onEditProfile={handleEditProfile} />} />
               <Route path="planner" element={<AiTripPlanner profile={profile} />} />
               <Route path="map" element={<InteractiveMap />} />
+              <Route path="compass" element={<SmartCompass />} />
               <Route path="itinerary" element={<ComingSoon title="Itinerary Builder" />} />
-              <Route path="budget" element={<ComingSoon title="Budget Planner" />} />
+              <Route path="budget" element={<AiBudgetPlanner />} />
               <Route path="destinations" element={<DestinationExplorer />} />
               <Route path="dest-wildlife" element={<DestinationCategory category="Wildlife" title="Wildlife Sanctuaries & Tiger Reserves" desc="Safaris, forest drives, and the best wildlife circuits in Madhya Pradesh." />} />
               <Route path="dest-heritage" element={<DestinationCategory category="Heritage" title="Heritage & History" desc="Temples, forts, ruins, and the cultural depth of MP's most storied destinations." />} />

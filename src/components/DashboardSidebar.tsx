@@ -8,12 +8,19 @@ const navItems = [
     ],
   },
   {
-    group: "AI Tools",
+    group: "AI Planners",
     items: [
       { path: "planner", label: "AI Trip Planner", icon: "M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" },
+      { path: "budget", label: "AI Budget Planner", icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" },
+      { path: "itinerary", label: "AI Itinerary Builder", icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" },
+      { path: "routes", label: "AI Route Optimizer", icon: "M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" },
+    ],
+  },
+  {
+    group: "Smart Tools",
+    items: [
       { path: "map", label: "Smart Atlas", icon: "M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" },
-      { path: "itinerary", label: "Itinerary Builder", icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" },
-      { path: "budget", label: "Budget Planner", icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" },
+      { path: "compass", label: "Smart Compass", icon: "M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z M21 12a9 9 0 11-18 0 9 9 0 0118 0z" },
     ],
   },
   {
@@ -49,7 +56,7 @@ interface DashboardSidebarProps {
 export default function DashboardSidebar({ collapsed, setCollapsed }: DashboardSidebarProps) {
   return (
     <aside
-      className="hidden shrink-0 border-r border-white/50 bg-white/65 backdrop-blur-xl lg:flex lg:flex-col"
+      className="hidden shrink-0 border-r border-white/50 bg-white/65 backdrop-blur-xl lg:flex lg:flex-col sticky top-0 h-screen overflow-hidden"
       style={{ width: collapsed ? 88 : 290 }}
     >
       <div className="border-b border-slate-200/70 px-5 py-5">
@@ -86,10 +93,9 @@ export default function DashboardSidebar({ collapsed, setCollapsed }: DashboardS
                 to={item.path.startsWith("/") ? item.path : dashboardPath(item.path)}
                 end
                 className={({ isActive }) =>
-                  `mb-1 flex items-center gap-3 rounded-2xl px-3 py-3 text-sm font-semibold transition ${
-                    isActive
-                      ? "bg-slate-950 text-white shadow-[0_12px_30px_rgba(15,23,42,0.16)]"
-                      : "text-slate-600 hover:bg-white hover:text-slate-900"
+                  `mb-1 flex items-center gap-3 rounded-2xl px-3 py-3 text-sm font-semibold transition ${isActive
+                    ? "bg-slate-950 text-white shadow-[0_12px_30px_rgba(15,23,42,0.16)]"
+                    : "text-slate-600 hover:bg-white hover:text-slate-900"
                   }`
                 }
                 title={collapsed ? item.label : undefined}
