@@ -50,32 +50,32 @@ interface DashboardSidebarProps {
 export default function DashboardSidebar({ collapsed, setCollapsed }: DashboardSidebarProps) {
   return (
     <aside
-      className="hidden shrink-0 border-r border-white/50 bg-white/65 backdrop-blur-xl lg:flex lg:flex-col sticky top-0 h-screen overflow-visible relative"
+      className="hidden shrink-0 border-r border-emerald-800/30 bg-[#064e3b] lg:flex lg:flex-col sticky top-0 h-screen overflow-visible relative shadow-[4px_0_24px_rgba(0,0,0,0.1)]"
       style={{ width: collapsed ? 88 : 290 }}
     >
-      <div className="border-b border-slate-200/70 px-4 py-4">
+      <div className="border-b border-emerald-800/50 px-4 py-4">
         <div className="flex items-center gap-3 min-w-0">
           <button
             onClick={() => setCollapsed((p) => !p)}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-950 text-sm font-bold text-white transition hover:bg-slate-700"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-sm font-bold text-white transition hover:bg-emerald-400 shadow-[0_4px_12px_rgba(16,185,129,0.3)]"
             title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             MP
           </button>
           {!collapsed && (
             <div className="overflow-hidden">
-              <p className="font-display whitespace-nowrap text-lg leading-none text-slate-900">MP Tourism</p>
-              <p className="mt-1 text-[10px] uppercase tracking-[0.28em] text-slate-400">AI dashboard platform</p>
+              <p className="font-display whitespace-nowrap text-lg leading-none text-emerald-50">MP Tourism</p>
+              <p className="mt-1 text-[10px] uppercase tracking-[0.28em] text-emerald-400/80 font-bold">AI dashboard platform</p>
             </div>
           )}
         </div>
       </div>
 
-      <nav className="flex-1 overflow-y-auto overflow-x-hidden px-3 py-5">
+      <nav className="flex-1 overflow-y-auto overflow-x-hidden px-3 py-5 custom-scrollbar">
         {navItems.map((group) => (
           <div key={group.group} className="mb-6">
             {!collapsed && (
-              <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-400">
+              <p className="mb-2 px-3 text-[10px] font-bold uppercase tracking-[0.24em] text-emerald-500/60">
                 {group.group}
               </p>
             )}
@@ -86,8 +86,8 @@ export default function DashboardSidebar({ collapsed, setCollapsed }: DashboardS
                 end
                 className={({ isActive }) =>
                   `mb-1 flex items-center gap-3 rounded-2xl px-3 py-3 text-sm font-semibold transition ${isActive
-                    ? "bg-slate-950 text-white shadow-[0_12px_30px_rgba(15,23,42,0.16)]"
-                    : "text-slate-600 hover:bg-white hover:text-slate-900"
+                    ? "bg-emerald-500 text-white shadow-[0_8px_20px_rgba(16,185,129,0.2)]"
+                    : "text-emerald-100/60 hover:bg-white/5 hover:text-white"
                   }`
                 }
                 title={collapsed ? item.label : undefined}
@@ -102,10 +102,10 @@ export default function DashboardSidebar({ collapsed, setCollapsed }: DashboardS
         ))}
       </nav>
 
-      <div className="border-t border-slate-200/70 p-4">
+      <div className="border-t border-emerald-800/50 p-4">
         <a
           href="/"
-          className="flex items-center gap-3 rounded-2xl px-3 py-3 text-sm font-semibold text-slate-500 transition hover:bg-white hover:text-slate-900"
+          className="flex items-center gap-3 rounded-2xl px-3 py-3 text-sm font-semibold text-emerald-100/50 transition hover:bg-white/5 hover:text-white"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="shrink-0">
             <path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -113,6 +113,11 @@ export default function DashboardSidebar({ collapsed, setCollapsed }: DashboardS
           {!collapsed && <span>Back to Home</span>}
         </a>
       </div>
+      <style>{`
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(16, 185, 129, 0.1); border-radius: 10px; }
+      `}</style>
     </aside>
   );
 }
