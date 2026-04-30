@@ -56,12 +56,12 @@ function TopBarMarquee() {
   return (
     <div className="overflow-hidden w-56 md:w-80">
       <div
-        className="flex gap-8 whitespace-nowrap text-xs font-bold uppercase tracking-[0.18em] text-emerald-100/40"
-        style={{ animation: "marqueeScroll 18s linear infinite" }}
+        className="flex gap-8 whitespace-nowrap text-xs font-bold uppercase tracking-[0.25em] text-emerald-700"
+        style={{ animation: "marqueeScroll 22s linear infinite" }}
       >
         {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((item, i) => (
           <span key={i} className="shrink-0 flex items-center gap-2">
-            <span className="inline-block h-1 w-1 rounded-full bg-emerald-400" />
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
             {item}
           </span>
         ))}
@@ -115,14 +115,14 @@ export default function Dashboard() {
         <DashboardSidebar collapsed={collapsed} setCollapsed={setCollapsed} />
 
         <main className="flex-1 flex flex-col min-w-0 h-full">
-          <div className="sticky top-0 z-20 shrink-0 border-b border-emerald-800/30 bg-[#064e3b]">
+          <div className="sticky top-0 z-20 shrink-0 border-b border-white/50 bg-white/60 backdrop-blur-xl">
             <div className="mx-auto flex max-w-[1600px] items-center justify-between px-5 py-4 md:px-8">
               <TopBarMarquee />
 
               <div className="relative flex items-center gap-3">
                 <button
                   onClick={() => setShowProfilePanel((p) => !p)}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-xs font-bold text-white transition hover:bg-emerald-400 shadow-[0_4px_12px_rgba(16,185,129,0.3)]"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-950 text-xs font-bold text-white transition hover:bg-slate-800 shadow-xl"
                   title="My profile"
                 >
                   {profile?.name ? profile.name.slice(0, 1).toUpperCase() : "U"}
