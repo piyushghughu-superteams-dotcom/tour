@@ -4,6 +4,7 @@ type StepOption = { label: string; icon: string; desc?: string };
 
 export interface Profile {
   name: string;
+  homeTown: string;
   profession: string;
   style: string;
   duration: string;
@@ -27,6 +28,16 @@ const steps = [
     sub: "We'll personalise your entire AI dashboard around you.",
     placeholder: "Enter your name…",
     icon: "👋",
+  },
+  {
+    id: "homeTown",
+    field: "homeTown",
+    type: "text",
+    label: "Home Town",
+    question: "Where are you travelling from?",
+    sub: "This helps AI calculate travel costs, transport routes, and flight durations.",
+    placeholder: "Enter your city (e.g. Mumbai, Delhi, London)…",
+    icon: "📍",
   },
   {
     id: "profession",
@@ -138,6 +149,7 @@ const steps = [
 
 const aiResponses: Record<string, (val: string) => string> = {
   name: (v) => `Great to meet you, ${v}! Let's build a trip profile that's entirely yours.`,
+  homeTown: (v) => `Travelling from ${v}? Excellent. We'll use that to calculate all your transit logistics.`,
   profession: (v) => `Got it — a ${v.toLowerCase()} traveler. AI will tune pacing and experiences accordingly.`,
   style: (v) => `${v} — perfect. Every recommendation will reflect your travel energy.`,
   duration: (v) => `${v} trip noted. AI will keep the itinerary tight, well-paced, and realistic.`,
@@ -155,10 +167,17 @@ export default function ProfileSetupModal({ onComplete, onSkip }: Props) {
   const [done, setDone] = useState(false);
 
   const [profile, setProfile] = useState<Profile>({
-    name: "", profession: "", style: "", duration: "", budget: "", groupSize: "", interests: [],
+    name: "", homeTown: "", profession: "", style: "", duration: "", budget: "", groupSize: "", interests: [],
   });
   const [textVal, setTextVal] = useState("");
   const [otherProfession, setOtherProfession] = useState("");
+
+  useEffect(() => {
+    if (current.type === "text") {
+      const field = current.field as keyof Profile;
+      setTextVal((profile[field] as string) || "");
+    }
+  }, [step]);
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 100);
@@ -190,7 +209,8 @@ export default function ProfileSetupModal({ onComplete, onSkip }: Props) {
     setAiMsg(msg);
 
     if (current.type === "text") {
-      setProfile((p) => ({ ...p, name: textVal.trim() }));
+      setProfile((p) => ({ ...p, [current.field]: textVal.trim() }));
+      setTextVal(""); // Clear for next step
     }
     if (current.field === "profession" && profile.profession === "Other" && otherProfession.trim()) {
       setProfile((p) => ({ ...p, profession: otherProfession.trim() }));
@@ -200,7 +220,7 @@ export default function ProfileSetupModal({ onComplete, onSkip }: Props) {
       setDone(true);
       setTimeout(() => {
         const final: Profile = { ...profile };
-        if (current.type === "text") final.name = textVal.trim();
+        if (current.type === "text") final[current.field as keyof Profile] = textVal.trim() as any;
         if (current.field === "profession" && final.profession === "Other" && otherProfession.trim()) final.profession = otherProfession.trim();
         onComplete(final);
       }, 1800);

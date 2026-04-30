@@ -167,6 +167,27 @@ export default function DashboardHome({
           </div>
         </div>
       </section>
+      
+      {/* ── SECTION 1.5: Quick Status Row ── */}
+      <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[
+          { label: "Profile Status", value: profile ? "Complete" : "Pending", sub: profile ? "Optimizing for you" : "AI is on standby", icon: "👤", color: "bg-emerald-50 text-emerald-600" },
+          { label: "Current Plan", value: profile ? `${profile.duration}` : "None", sub: profile ? "Active Route" : "Awaiting sync", icon: "🗺️", color: "bg-blue-50 text-blue-600" },
+          { label: "Travel Style", value: profile ? `${profile.style.split(' ')[0]}` : "Mixed", sub: profile ? "Theme locked" : "Default mode", icon: "🧭", color: "bg-violet-50 text-violet-600" },
+          { label: "Live Weather", value: "24°C", sub: "Clear skies in MP", icon: "☀️", color: "bg-amber-50 text-amber-600" },
+        ].map((stat, i) => (
+          <div key={i} className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm hover:shadow-md transition">
+            <div className="flex items-center gap-3">
+              <span className={`flex h-10 w-10 items-center justify-center rounded-2xl text-xl ${stat.color}`}>{stat.icon}</span>
+              <div className="min-w-0">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{stat.label}</p>
+                <p className="font-display text-lg text-slate-900 truncate">{stat.value}</p>
+              </div>
+            </div>
+            <p className="mt-3 text-[10px] text-slate-500 font-medium">{stat.sub}</p>
+          </div>
+        ))}
+      </section>
 
       {/* ── SECTION 2: Video Left + Two Content Blocks Right ── */}
       <section className="grid grid-cols-1 lg:grid-cols-[0.45fr_1fr] gap-6 items-start">
@@ -363,16 +384,25 @@ export default function DashboardHome({
             </div>
           </div>
 
-          {/* Tiny accent card */}
-          <div className="rounded-[1.75rem] border border-amber-100 bg-amber-50 p-5 flex items-center gap-3">
-            <div className="h-9 w-9 rounded-xl bg-amber-400 flex items-center justify-center shrink-0 shadow">
-              <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3l14 9-14 9V3z" />
+          {/* Smart AI Insight Card */}
+          <div className="rounded-[1.75rem] border border-emerald-100 bg-emerald-50 p-5 flex items-start gap-4">
+            <div className="h-10 w-10 rounded-2xl bg-emerald-500 flex items-center justify-center shrink-0 shadow-lg shadow-emerald-200">
+              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
             <div className="min-w-0">
-              <p className="text-xs font-bold text-amber-900">Experience MP in Motion</p>
-              <p className="text-[10px] text-amber-700 mt-0.5">Photography and cinema circuits powered by AI.</p>
+              <div className="flex items-center gap-2">
+                <p className="text-xs font-bold text-emerald-900">Live AI Insight</p>
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              </div>
+              <p className="text-[11px] text-emerald-700 mt-1 leading-relaxed">
+                {profile ? (
+                  <>Current weather in <b>{guidedPlan?.route[0] || "Kanha"}</b> is 24°C. Perfect for a <b>{profile.style.toLowerCase()}</b> session today.</>
+                ) : (
+                  "Complete your profile to unlock real-time weather and travel insights for your route."
+                )}
+              </p>
             </div>
           </div>
         </div>

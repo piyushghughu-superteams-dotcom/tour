@@ -109,11 +109,54 @@ export default function AiTripPlanner({ profile: propProfile }: { profile?: Prof
   const [interest, setInterest] = useState(savedProfile?.interests?.[0]?.includes("Wildlife") ? "Wildlife" : savedProfile?.interests?.[0]?.includes("Heritage") ? "Heritage" : "Mixed");
   
   // New Budget Config State
-  const [origin, setOrigin] = useState("");
+  const [origin, setOrigin] = useState(savedProfile?.homeTown || "");
   const [groupSize, setGroupSize] = useState(savedProfile?.groupSize?.replace(/[^0-9]/g, "") || "2");
   const [inboundTransport, setInboundTransport] = useState("flight");
   const [localTransport, setLocalTransport] = useState("private_cab");
   const [style, setStyle] = useState("comfort");
+  const [useProfile, setUseProfile] = useState(false);
+
+  function applyProfile() {
+    if (!savedProfile) return;
+    
+    // Simple logic to map profile data to planner states
+    if (savedProfile.interests && savedProfile.interests.length > 0) {
+      const primary = savedProfile.interests[0];
+      if (primary.includes("Wildlife")) setInterest("Wildlife");
+      else if (primary.includes("Heritage")) setInterest("Heritage");
+      else if (primary.includes("Nature")) setInterest("Nature & Hills");
+      else if (primary.includes("Spiritual")) setInterest("Spiritual");
+      else setInterest("Mixed");
+    }
+
+    if (savedProfile.groupSize) {
+      setGroupSize(savedProfile.groupSize.replace(/[^0-9]/g, "") || "2");
+    }
+
+    if (savedProfile.budget) {
+      const b = savedProfile.budget.toLowerCase();
+      if (b.includes("luxury")) setStyle("luxury");
+      else if (b.includes("budget")) setStyle("budget");
+      else setStyle("comfort");
+    }
+
+    if (savedProfile.homeTown) {
+      setOrigin(savedProfile.homeTown);
+    }
+
+    setUseProfile(true);
+    // Visual feedback
+    setTimeout(() => setUseProfile(false), 2000);
+
+    // Automatically trigger generation if origin is present
+    const finalOrigin = origin || savedProfile?.homeTown;
+    if (finalOrigin) {
+      generate(finalOrigin);
+    } else {
+      alert("Please enter your Home Town / Origin city first!");
+    }
+  }
+
 
   const [mode, setMode] = useState<PlannerMode>("idle");
   const [loadingText, setLoadingText] = useState("");
@@ -266,8 +309,9 @@ export default function AiTripPlanner({ profile: propProfile }: { profile?: Prof
     };
   }, [mode, days, interest, origin, groupSize, inboundTransport, localTransport, style]);
 
-  function generate() {
-    if (!origin) {
+  function generate(originOverride?: string) {
+    const activeOrigin = originOverride || origin;
+    if (!activeOrigin) {
       alert("Please enter a Home Town / Origin city.");
       return;
     }
@@ -313,6 +357,48 @@ export default function AiTripPlanner({ profile: propProfile }: { profile?: Prof
             <h2 className="mt-2 font-display text-3xl text-slate-900">AI Trip Planner</h2>
             <p className="mt-2 text-sm leading-7 text-slate-500">Configure parameters for our AI to generate a hyper-detailed daily itinerary & financial breakdown.</p>
           </div>
+
+          {/* Profile Sync Card */}
+          {savedProfile && (
+            <div className={`p-5 rounded-2xl border transition-all duration-500 ${useProfile ? 'border-emerald-500 bg-emerald-50' : 'border-slate-100 bg-slate-50/50'}`}>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="h-8 w-8 rounded-full bg-slate-900 flex items-center justify-center text-[10px] font-bold text-white">
+                    {savedProfile.name?.charAt(0) || "U"}
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-slate-900">{savedProfile.name}</p>
+                    <p className="text-[10px] text-slate-400 uppercase tracking-widest">Personal Profile</p>
+                  </div>
+                </div>
+                <div className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              </div>
+              <p className="text-[11px] text-slate-500 leading-relaxed mb-4">
+                We found your travel preferences for <b>{savedProfile.interests?.join(", ")}</b>. Would you like to auto-fill the planner?
+              </p>
+              <button 
+                onClick={applyProfile}
+                className={`w-full py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+                  useProfile 
+                    ? 'bg-emerald-500 text-white shadow-lg' 
+                    : 'bg-white border border-slate-200 text-slate-700 hover:border-emerald-500 hover:text-emerald-600'
+                }`}
+              >
+                {useProfile ? (
+                  <>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    Applied Successfully
+                  </>
+                ) : (
+                  <>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 7l-8-4-8 4m16 5l-8-4-8 4m16 5l-8-4-8 4M4 17l8 4 8-4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    Plan from Profile
+                  </>
+                )}
+              </button>
+            </div>
+          )}
+
 
           <div className="space-y-6">
             
