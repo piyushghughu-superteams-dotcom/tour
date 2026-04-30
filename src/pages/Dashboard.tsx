@@ -7,6 +7,8 @@ import SmartCompass from "./SmartCompass";
 import AiBudgetPlanner from "./AiBudgetPlanner";
 import SmartAnalyzer from "./SmartAnalyzer";
 import AiRouteOptimizer from "./AiRouteOptimizer";
+import AIChat from "./AIChat";
+
 
 const PROFILE_STORAGE_KEY = "mp-tourism-profile";
 
@@ -170,6 +172,7 @@ export default function Dashboard() {
                 <Route path="hotels" element={<HotelsAndStays />} />
                 <Route path="routes" element={<AiRouteOptimizer />} />
                 <Route path="weather" element={<SmartAnalyzer />} />
+                <Route path="chat" element={<AIChat profile={profile} />} />
               </Routes>
             </div>
           </div>
